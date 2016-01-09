@@ -5,12 +5,12 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
   host: localhost
-  username: rails
-  password: <%= ENV['APP_DATABASE_PASSWORD'] %>
+  username: waze
+  password: waze
 
 development:
   <<: *default
-  database: rails_project_development
+  database: wazedb
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -21,6 +21,6 @@ test:
 
 production:
   <<: *default
-  database: rails_project_production
-  username: rails
-  password: <%= ENV['APP_DATABASE_PASSWORD'] %>
+  database: wazedb
+  username: waze
+  password: waze
