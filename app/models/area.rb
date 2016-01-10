@@ -4,6 +4,6 @@ class Area < ActiveRecord::Base
   has_many :cities, class_name: 'CityMapraid'
   has_many :segments, through: :cities
   
-  scope :mapraid, -> {where('id in (1,2)')}
-  scope :others, -> {where('id not in (1,2)')}
+  scope :mapraid, -> {where('id in (21,22)')}
+  scope :others, -> {where('id not in (21,22)')}
 end
