@@ -28,6 +28,8 @@ gem 'autoprefixer-rails'
 
 gem 'haml'
 
+gem 'therubyracer'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
