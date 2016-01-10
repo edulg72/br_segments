@@ -8,7 +8,7 @@ class MainController < ApplicationController
   def segments
     @area = CityMapraid.find(params['id'])
     @update = Update.find('segments')
-    @nav = [{@area.name => "/segments/#{@area.gid}"},{ t('nav-first-page') => '/'}]
+    @nav = [{@area.name => "/segments/#{@area.gid}"},{@area.area.name => "/segments_area/#{@area.area.id}"},{ t('nav-first-page') => '/'}]
   end
 
   def segments_area
