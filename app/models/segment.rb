@@ -1,5 +1,5 @@
 class Segment < ActiveRecord::Base
-  has_one :editor, foreign_key: :last_edit_by, class: :user
+  has_one :editor, foreign_key: :last_edit_by, class_name: :user
   belongs_to :street 
 
   scope :drivable, -> {where('roadtype in (1,2,3,4,6,7,8,15,17,20)')}
