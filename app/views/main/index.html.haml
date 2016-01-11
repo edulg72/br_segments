@@ -10,8 +10,8 @@
               = render partial: "#{a.map_name}"
           %ul.list-group
             %li.list-group-item
-              %a{:href => "/segments_state/#{a.id}"} Segmentos desconectados
+              %a{:href => "/segments_area/#{a.id}"} Segmentos desconectados
               %span.badge= a.segments.drivable.disconnected.count
             %li.list-group-item
-              %a{:href => "/segments_state/#{a.id}"} Segmentos com elevações exageradas
+              %a{:href => "/segments_area/#{a.id}"} Segmentos com elevações exageradas
               %span.badge= a.segments.where('level < -3 or level > 3').size
