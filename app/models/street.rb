@@ -1,4 +1,5 @@
 class Street < ActiveRecord::Base
+  self.table_name = 'vw_streets'
   belongs_to :city
   has_many :segments
 
