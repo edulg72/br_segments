@@ -9,7 +9,7 @@
 # scan_PU.rb <user> <password> <west longitude> <north latitude> <east longitude> <south latitude> <step*>
 #
 # * Defines the size in degrees (width and height) of the area to be analyzed. On very dense areas use small values to avoid server overload.
-# 
+#
 require 'mechanize'
 require 'pg'
 require 'json'
