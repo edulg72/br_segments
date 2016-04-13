@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/rails/mapraidbr/scripts/
+cd /home/rails/segments/scripts/
 
 echo "Start: $(date '+%d/%m/%Y %H:%M:%S')"
 
@@ -2263,12 +2263,12 @@ case "$3" in
 esac
 
 
-psql -h localhost -d mapraid -U waze -c 'update segments set city_id = (select gid from cities_mapraid where ST_Contains(geom, ST_SetSRID(ST_Point(segments.longitude, segments.latitude), 4674)) limit 1) where city_id is null;'
-psql -h localhost -d mapraid -U waze -c 'delete from segments where city_id is null;'
-psql -h localhost -d mapraid -U waze -c 'delete from streets where id in (select id from streets except select distinct street_id from segments);'
-psql -h localhost -d mapraid -U waze -c 'update segments s1 set dc_density = (select count(*) from segments s2 where not s2.connected and s2.latitude between (s1.latitude - 0.01) and (s1.latitude + 0.01) and s2.longitude between (s1.longitude - 0.01) and (s1.longitude + 0.01)) where not s1.connected and s1.dc_density is null;'
-psql -h localhost -d mapraid -U waze -c "update updates set updated_at = current_timestamp where object = 'segments';"
-psql -h localhost -d mapraid -U waze -c "refresh materialized view vw_segments; refresh materialized view vw_streets;"
-psql -h localhost -d mapraid -U waze -c 'vacuum analyze;'
+psql -h localhost -d wazedb -U waze -c 'update segments set city_id = (select gid from cities_shapes where ST_Contains(geom, ST_SetSRID(ST_Point(segments.longitude, segments.latitude), 4326)) limit 1) where city_id is null;'
+psql -h localhost -d wazedb -U waze -c 'delete from segments where city_id is null;'
+psql -h localhost -d wazedb -U waze -c 'delete from streets where id in (select id from streets except select distinct street_id from segments);'
+psql -h localhost -d wazedb -U waze -c 'update segments s1 set dc_density = (select count(*) from segments s2 where not s2.connected and s2.latitude between (s1.latitude - 0.01) and (s1.latitude + 0.01) and s2.longitude between (s1.longitude - 0.01) and (s1.longitude + 0.01)) where not s1.connected and s1.dc_density is null;'
+psql -h localhost -d wazedb -U waze -c "update updates set updated_at = current_timestamp where object = '$3';"
+psql -h localhost -d wazedb -U waze -c "refresh materialized view vw_segments; refresh materialized view vw_streets;"
+psql -h localhost -d wazedb -U waze -c 'vacuum analyze;'
 
 echo "End: $(date '+%d/%m/%Y %H:%M:%S')"

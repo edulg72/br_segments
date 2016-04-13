@@ -1,20 +1,21 @@
 class MainController < ApplicationController
 
   def index
-    @areas = Area.mapraid
+    @segments = Segment.all
+    @states = StateShape.all
     @nav = [{ t('nav-first-page') => '/'}]
   end
-  
+
   def segments
-    @area = CityMapraid.find(params['id'])
-    @update = Update.find('segments')
-    @nav = [{@area.name => "/segments/#{@area.gid}"},{@area.area.name => "/segments_area/#{@area.area.id}"},{ t('nav-first-page') => '/'}]
+    @area = CityShape.find(params['id'])
+    @update = Update.find(@area.state.abbreviation)
+    @nav = [{@area.name => "#"},{@area.state.nm_estado => "/segments_state/#{@area.state.cd_geocuf}"},{ t('nav-first-page') => '/'}]
   end
 
-  def segments_area
-    @area = Area.find(params['id'])
-    @update = Update.find('segments')
-    @nav = [{@area.name => '#'},{ t('nav-first-page') => '/'}]
+  def segments_state
+    @state = StateShape.find(params['id'])
+    @update = Update.find(params['id'])
+    @nav = [{@state.nm_estado => '#'},{ t('nav-first-page') => '/'}]
     render :segments
   end
 end
