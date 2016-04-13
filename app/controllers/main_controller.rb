@@ -3,6 +3,7 @@ class MainController < ApplicationController
   def index
     @segments = Segment.all
     @states = StateShape.all
+    @update = Update.maximum('updated_at')
     @nav = [{ t('nav-first-page') => '/'}]
   end
 
@@ -13,9 +14,9 @@ class MainController < ApplicationController
   end
 
   def segments_state
-    @state = StateShape.find(params['id'])
+    @area = StateShape.find_by(abbreviation: params['id'])
     @update = Update.find(params['id'])
-    @nav = [{@state.nm_estado => '#'},{ t('nav-first-page') => '/'}]
+    @nav = [{@area.nm_estado => '#'},{ t('nav-first-page') => '/'}]
     render :segments
   end
 end

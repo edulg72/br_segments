@@ -2,13 +2,13 @@
   .page-header
     %h3
       = @area.name
-      - if @area.class.to_s == 'Area'
+      - if @area.class.to_s == 'StateShape'
         %small.dropdown
           %button.btn.btn-default.dropdown-toggle{'type' => "button", 'id' => "dropdownCities", 'data-toggle' => "dropdown", 'aria-haspopup' => "true", 'aria-expanded' => "true"}
             Cidade
             %span.caret
           %ul.dropdown-menu{ 'aria-labelledby' => "dropdownCities"}
-            - @area.cities.order(:name).each do |c|
+            - @area.cities.order(:nm_municip).each do |c|
               %li
                 %a{:href => "/segments/#{c.gid}"}= c.name
       %small= "#{t('updated-at')} #{ @update.updated_at.strftime('%d/%m/%Y %H:%M')}"
@@ -16,8 +16,8 @@
     - if @area.segments.drivable.disconnected.size > 0
       .panel.panel-default
         #disconnected.panel-heading{:role => "tab"}
-          %h4.panel-title 
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"} 
+          %h4.panel-title
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
               Segmentos desconectados
               %small ou com convers&otilde;es desativadas
               %span.badge= @area.segments.drivable.disconnected.size
@@ -27,7 +27,7 @@
               %tr
                 %th.text-center{:width => "100", 'data-toggle' => "tooltip", 'data-placement' => "top", :title => "Quantidade de segmentos próximos com problemas semelhantes"}= t('density')
                 %th Localiza&ccedil;&atilde;o do Segmento
-            %tbody  
+            %tbody
               - @area.segments.drivable.disconnected.order('dc_density desc').each do |segment|
                 %tr
                   %td.text-center= segment.dc_density
@@ -37,7 +37,7 @@
       .panel.panel-default
         #level.panel-heading{:role => "tab"}
           %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"} 
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
               Segmentos com eleva&ccedil;&otilde;es "exageradas"
               %span.badge= @area.segments.where('level < -3 or level > 3').size
         #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
@@ -56,7 +56,7 @@
       .panel.panel-default
         #noname.panel-heading{:role => "tab"}
           %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"} 
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"}
               Segmentos sem nome
               %span.badge= @area.segments.no_name.size
         #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}

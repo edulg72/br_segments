@@ -1,19 +1,20 @@
-.container
-  .row
-    .col-sm-12.col-md-8.col-lg-9
-      .map
-        = render partial: "mapa"
-    .col-sm-12.col-md-4.col-lg-3
-      #accordion.panel-group{:role => "tablist", 'aria-multiselecttable' => "true"}
-        .panel.panel-default
-          #disconnected.panel-heading{:role => "tab"}
-            %h4.panel-title
-              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
-                =t('disconnected')
-                %span.badge.text-right= @segments.drivable.disconnected.count
-          #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
-            %ul.list_group
-              - @states.order('nm_estado').each do |s|
-                %li.list-group-item
-                  %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                  %span.badge= s.segments.drivable.disconnected.count
+- cache [@update] do
+  .container
+    .row
+      .col-sm-12.col-md-6.col-lg-8
+        .map
+          = render partial: "mapa"
+      .col-sm-12.col-md-6.col-lg-4
+        #accordion.panel-group{:role => "tablist", 'aria-multiselecttable' => "true"}
+          .panel.panel-default
+            #disconnected.panel-heading{:role => "tab"}
+              %h4.panel-title
+                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
+                  =t('disconnected')
+                  %span.badge.text-right= @segments.drivable.disconnected.count
+            #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
+              %ul.list-group
+                - @states.order('nm_estado').each do |s|
+                  %li.list-group-item
+                    %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                    %span.badge= s.segments.drivable.disconnected.count

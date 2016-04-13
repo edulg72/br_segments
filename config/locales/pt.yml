@@ -20,8 +20,9 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 pt:
-  app-title: "MapRaid Brasil"
+  app-title: "Segmentos Brasil"
   density: "Densidade"
+  disconnected: "Segmentos desconectados"
   nav-first-page: "Principal"
   no-city: "Sem cidade"
   no-street: "Sem nome de rua"

@@ -767,8 +767,6 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -43.91 -2.29 -43.1 -2.38 0.09
     ruby scan_segments.rb $1 $2 -46.52 -2.38 -42.92 -2.47 0.09
     ruby scan_segments.rb $1 $2 -46.52 -2.47 -42.65 -2.56 0.045
-  ;&
-  MA1)
     ruby scan_segments.rb $1 $2 -46.7 -2.56 -42.56 -2.65 0.09
     ruby scan_segments.rb $1 $2 -46.7 -2.65 -41.75 -2.74 0.09
     ruby scan_segments.rb $1 $2 -46.7 -2.74 -41.75 -2.83 0.09
@@ -1285,8 +1283,6 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -58.28 -1.18 -58.1 -1.27 0.09
     ruby scan_segments.rb $1 $2 -58.01 -1.18 -46.04 -1.27 0.09
     ruby scan_segments.rb $1 $2 -58.01 -1.27 -46.04 -1.36 0.09
-  ;&
-  PA1)
     ruby scan_segments.rb $1 $2 -58.01 -1.36 -46.04 -1.45 0.09
     ruby scan_segments.rb $1 $2 -57.83 -1.45 -46.13 -1.54 0.09
     ruby scan_segments.rb $1 $2 -57.74 -1.54 -46.13 -1.63 0.09
