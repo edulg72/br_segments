@@ -8,7 +8,7 @@ module MainHelper
       when 7
         t("minor-highway")
       when 4
-        t("Ramp")
+        t("ramp")
       when 2
         t("primary-street")
       when 1
