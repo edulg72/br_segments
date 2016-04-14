@@ -92,3 +92,22 @@
                   %td= roadtype_name(segment.roadtype)
                   %td
                     %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= "#{((segment.street_id.nil? or segment.street.nil?) ? t('noname') : ((segment.street.name.nil? or segment.street.name.empty?) ? t('no-street') : segment.street.name.to_s) + ', ' + (segment.street.city_id.nil? ? t('no-city') : ((segment.street.city.name.nil? or segment.street.city.name.empty?) ? t('no-city') : segment.street.city.name.to_s) + ', ' + segment.street.city.state.name.to_s))}"
+    - if @area.segments.where(roadtype: 15).size > 0
+      .panel.panel-default
+        #ferry.panel-heading{:role => "tab"}
+          %h4.panel-title
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#ferry-body", 'aria-expanded' => "true", 'aria-controls' => "ferry-body"}
+              = t('ferries')
+              %span.badge= @area.segments.where(roadtype: 15).size
+        #ferry-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "ferry"}
+          %table.table.table-condensed.table-hover
+            %thead
+              %tr
+                %th Tipo
+                %th Localiza&ccedil;&atilde;o do Segmento
+            %tbody
+              - @area.segments.where(roadtype: 15).order("roadtype").each do |segment|
+                %tr
+                  %td= roadtype_name(segment.roadtype)
+                  %td
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= "#{((segment.street_id.nil? or segment.street.nil?) ? t('noname') : ((segment.street.name.nil? or segment.street.name.empty?) ? t('no-street') : segment.street.name.to_s) + ', ' + (segment.street.city_id.nil? ? t('no-city') : ((segment.street.city.name.nil? or segment.street.city.name.empty?) ? t('no-city') : segment.street.city.name.to_s) + ', ' + segment.street.city.state.name.to_s))}"

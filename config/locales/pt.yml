@@ -23,11 +23,13 @@ pt:
   app-title: "Segmentos Brasil"
   density: "Densidade"
   disconnected: "Segmentos desconectados"
+  ferries: "Balsas"
   nav-first-page: "Principal"
   no-city: "Sem cidade"
   no-street: "Sem nome de rua"
   noname: "Segmento sem nome"
   updated-at: "Atualizado em"
+  without-speed: "Rodovias sem velocidade"
 
   # Road types
   freeway: "Expressa"
