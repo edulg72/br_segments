@@ -1561,12 +1561,12 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -45.91 -8.58 -41.14 -8.67 0.09
 
     # Ghost Town => [-43.57, -8.67] - [-43.21, -8.94]
-    ruby busca_segments.rb $1 $2 -45.91 -8.67 -43.57 -8.76 0.09
-    ruby busca_segments.rb $1 $2 -43.21 -8.67 -41.23 -8.76 0.09
-    ruby busca_segments.rb $1 $2 -46.0 -8.76 -43.57 -8.85 0.09
-    ruby busca_segments.rb $1 $2 -43.21 -8.76 -41.32 -8.85 0.09
-    ruby busca_segments.rb $1 $2 -46.0 -8.85 -43.57 -8.94 0.09
-    ruby busca_segments.rb $1 $2 -43.21 -8.85 -41.41 -8.94 0.09
+    ruby scan_segments.rb $1 $2 -45.91 -8.67 -43.57 -8.76 0.09
+    ruby scan_segments.rb $1 $2 -43.21 -8.67 -41.23 -8.76 0.09
+    ruby scan_segments.rb $1 $2 -46.0 -8.76 -43.57 -8.85 0.09
+    ruby scan_segments.rb $1 $2 -43.21 -8.76 -41.32 -8.85 0.09
+    ruby scan_segments.rb $1 $2 -46.0 -8.85 -43.57 -8.94 0.09
+    ruby scan_segments.rb $1 $2 -43.21 -8.85 -41.41 -8.94 0.09
 
     ruby scan_segments.rb $1 $2 -46.0 -8.94 -41.5 -9.03 0.09
     ruby scan_segments.rb $1 $2 -46.0 -9.03 -41.68 -9.12 0.09
