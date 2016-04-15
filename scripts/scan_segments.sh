@@ -360,7 +360,7 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -52.28 -1.13 -51.74 -1.22 0.09
     ruby scan_segments.rb $1 $2 -52.19 -1.22 -52.01 -1.31 0.09
   ;;
-  BA)
+  BA1)
     ruby scan_segments.rb $1 $2 -39.61 -8.52 -39.25 -8.61 0.09
     ruby scan_segments.rb $1 $2 -39.7 -8.61 -39.16 -8.7 0.09
     ruby scan_segments.rb $1 $2 -41.5 -8.7 -40.96 -8.79 0.09
@@ -376,6 +376,7 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -40.33 -9.06 -38.26 -9.15 0.09
     ruby scan_segments.rb $1 $2 -41.95 -9.15 -40.6 -9.24 0.09
     ruby scan_segments.rb $1 $2 -40.33 -9.15 -38.26 -9.24 0.09
+    psql -c "vacuum analyze;"
     ruby scan_segments.rb $1 $2 -43.66 -9.24 -43.3 -9.33 0.09
     ruby scan_segments.rb $1 $2 -42.4 -9.24 -40.6 -9.33 0.09
     ruby scan_segments.rb $1 $2 -40.42 -9.24 -38.17 -9.33 0.09
@@ -390,6 +391,7 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -43.84 -9.78 -37.9 -9.87 0.09
     ruby scan_segments.rb $1 $2 -43.75 -9.87 -37.9 -9.96 0.09
     ruby scan_segments.rb $1 $2 -43.75 -9.96 -37.81 -10.05 0.09
+    psql -c "vacuum analyze;"
     ruby scan_segments.rb $1 $2 -45.73 -10.05 -45.55 -10.14 0.09
     ruby scan_segments.rb $1 $2 -43.84 -10.05 -37.72 -10.14 0.09
     ruby scan_segments.rb $1 $2 -45.73 -10.14 -45.46 -10.23 0.09
@@ -409,6 +411,8 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -44.74 -10.68 -37.81 -10.77 0.09
     ruby scan_segments.rb $1 $2 -46.36 -10.77 -45.01 -10.86 0.09
     ruby scan_segments.rb $1 $2 -44.83 -10.77 -38.17 -10.86 0.09
+    ;;
+  BA2)
     ruby scan_segments.rb $1 $2 -46.36 -10.86 -38.17 -10.95 0.09
     ruby scan_segments.rb $1 $2 -46.45 -10.95 -38.08 -11.04 0.09
     ruby scan_segments.rb $1 $2 -46.45 -11.04 -37.99 -11.13 0.09
@@ -429,6 +433,7 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -46.36 -12.3 -37.81 -12.39 0.09
     ruby scan_segments.rb $1 $2 -46.36 -12.39 -37.81 -12.48 0.09
     ruby scan_segments.rb $1 $2 -46.27 -12.48 -37.9 -12.57 0.09
+    psql -c "vacuum analyze;"
     ruby scan_segments.rb $1 $2 -46.36 -12.57 -37.99 -12.66 0.09
     ruby scan_segments.rb $1 $2 -46.36 -12.66 -37.99 -12.75 0.09
     ruby scan_segments.rb $1 $2 -46.36 -12.75 -38.08 -12.84 0.09
@@ -446,6 +451,8 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -46.27 -13.83 -38.89 -13.92 0.09
     ruby scan_segments.rb $1 $2 -46.27 -13.92 -38.89 -14.01 0.09
     ruby scan_segments.rb $1 $2 -46.27 -14.01 -38.89 -14.1 0.09
+    ;;
+  BA3)
     ruby scan_segments.rb $1 $2 -46.27 -14.1 -38.89 -14.19 0.09
     ruby scan_segments.rb $1 $2 -46.18 -14.19 -38.98 -14.28 0.09
     ruby scan_segments.rb $1 $2 -46.0 -14.28 -44.38 -14.37 0.09
@@ -466,6 +473,7 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -46.09 -14.91 -45.37 -15.0 0.09
     ruby scan_segments.rb $1 $2 -42.76 -14.91 -38.98 -15.0 0.09
     ruby scan_segments.rb $1 $2 -46.09 -15.0 -45.55 -15.09 0.09
+    psql -c "vacuum analyze;"
     ruby scan_segments.rb $1 $2 -42.58 -15.0 -38.98 -15.09 0.09
     ruby scan_segments.rb $1 $2 -46.09 -15.09 -45.64 -15.18 0.09
     ruby scan_segments.rb $1 $2 -42.4 -15.09 -38.98 -15.18 0.09
@@ -488,6 +496,7 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -40.15 -16.35 -38.98 -16.44 0.09
     ruby scan_segments.rb $1 $2 -40.24 -16.44 -38.98 -16.53 0.09
     ruby scan_segments.rb $1 $2 -40.33 -16.53 -39.07 -16.62 0.09
+    psql -c "vacuum analyze;"
     ruby scan_segments.rb $1 $2 -40.33 -16.62 -39.07 -16.71 0.09
     ruby scan_segments.rb $1 $2 -40.42 -16.71 -39.07 -16.8 0.09
     ruby scan_segments.rb $1 $2 -40.51 -16.8 -39.07 -16.89 0.09
@@ -1550,9 +1559,15 @@ case "$3" in
     ruby scan_segments.rb $1 $2 -45.82 -8.4 -40.87 -8.49 0.09
     ruby scan_segments.rb $1 $2 -45.82 -8.49 -41.05 -8.58 0.09
     ruby scan_segments.rb $1 $2 -45.91 -8.58 -41.14 -8.67 0.09
-    ruby scan_segments.rb $1 $2 -45.91 -8.67 -41.23 -8.76 0.09
-    ruby scan_segments.rb $1 $2 -46.0 -8.76 -41.32 -8.85 0.09
-    ruby scan_segments.rb $1 $2 -46.0 -8.85 -41.41 -8.94 0.09
+
+    # Ghost Town => [-43.57, -8.67] - [-43.21, -8.94]
+    ruby busca_segments.rb $1 $2 -45.91 -8.67 -43.57 -8.76 0.09
+    ruby busca_segments.rb $1 $2 -43.21 -8.67 -41.23 -8.76 0.09
+    ruby busca_segments.rb $1 $2 -46.0 -8.76 -43.57 -8.85 0.09
+    ruby busca_segments.rb $1 $2 -43.21 -8.76 -41.32 -8.85 0.09
+    ruby busca_segments.rb $1 $2 -46.0 -8.85 -43.57 -8.94 0.09
+    ruby busca_segments.rb $1 $2 -43.21 -8.85 -41.41 -8.94 0.09
+
     ruby scan_segments.rb $1 $2 -46.0 -8.94 -41.5 -9.03 0.09
     ruby scan_segments.rb $1 $2 -46.0 -9.03 -41.68 -9.12 0.09
     ruby scan_segments.rb $1 $2 -46.0 -9.12 -41.68 -9.21 0.09
