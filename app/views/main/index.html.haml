@@ -15,21 +15,23 @@
             #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
               %ul.list-group
                 - @states.order('nm_estado').each do |s|
-                  %li.list-group-item
-                    %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                    %span.badge= s.segments.drivable.disconnected.count
+                  - if s.segments.drivable.disconnected.count > 0
+                    %li.list-group-item
+                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                      %span.badge= s.segments.drivable.disconnected.count
           .panel.panel-default
             #level.panel-heading{:role => "tab"}
               %h4.panel-title
                 %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
                   =t('level')
-                  %span.badge.text-right= @segments.where('level < -3 or level > 3').count
+                  %span.badge.text-right= @segments.weird_level.count
             #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
               %ul.list-group
                 - @states.order('nm_estado').each do |s|
-                  %li.list-group-item
-                    %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                    %span.badge= s.segments.where('level < -3 or level > 3').count
+                  - if s.segments.weird_level.count > 0
+                    %li.list-group-item
+                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                      %span.badge= s.segments.weird_level.count
           .panel.panel-default
             #noname.panel-heading{:role => "tab"}
               %h4.panel-title
@@ -39,9 +41,10 @@
             #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}
               %ul.list-group
                 - @states.order('nm_estado').each do |s|
-                  %li.list-group-item
-                    %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                    %span.badge= s.segments.no_name.count
+                  - if s.segments.no_name.count > 0
+                    %li.list-group-item
+                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                      %span.badge= s.segments.no_name.count
           .panel.panel-default
             #without-speed.panel-heading{:role => "tab"}
               %h4.panel-title
@@ -51,9 +54,10 @@
             #without-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "without-speed"}
               %ul.list-group
                 - @states.order('nm_estado').each do |s|
-                  %li.list-group-item
-                    %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                    %span.badge= s.segments.important.without_speed.count
+                  - if s.segments.important.without_speed.count > 0
+                    %li.list-group-item
+                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                      %span.badge= s.segments.important.without_speed.count
           .panel.panel-default
             #ferry.panel-heading{:role => "tab"}
               %h4.panel-title
@@ -63,6 +67,7 @@
             #ferry-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "ferry"}
               %ul.list-group
                 - @states.order('nm_estado').each do |s|
-                  %li.list-group-item
-                    %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                    %span.badge= s.segments.where(roadtype: 15).count
+                  - if s.segments.where(roadtype: 15).count > 0
+                    %li.list-group-item
+                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                      %span.badge= s.segments.where(roadtype: 15).count
