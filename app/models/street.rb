@@ -1,8 +1,8 @@
 class Street < ActiveRecord::Base
   self.table_name = 'vw_streets'
   self.primary_key = 'id'
-  
-  belongs_to :city
+
+  belongs_to :city, -> {includes :state}
   has_many :segments
 
   def segment_ids

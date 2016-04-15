@@ -3,8 +3,8 @@ class Segment < ActiveRecord::Base
   self.primary_key = 'id'
 
   belongs_to :editor, foreign_key: 'last_edit_by', class_name: 'User'
-  belongs_to :street
-  belongs_to :city, foreign_key: 'city_id', class_name: 'CityShape'
+  belongs_to :street, -> { includes :city }
+  belongs_to :city, -> {includes :state}, foreign_key: 'city_id', class_name: 'CityShape'
 
   scope :drivable, -> {where(roadtype: [1,2,3,4,6,7,8,15,17,20])}
   scope :important, -> {where(roadtype: [3,4,6,7])}

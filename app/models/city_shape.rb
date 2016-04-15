@@ -4,7 +4,7 @@ class CityShape < ActiveRecord::Base
 
   belongs_to :state, foreign_key: :state_id, class_name: 'StateShape'
   belongs_to :city, foreign_key: :city_id, class_name: 'City'
-  has_many :segments, foreign_key: :city_id
+  has_many :segments, -> { includes :street }, foreign_key: :city_id
 
   def name
     "#{nm_municip}"
