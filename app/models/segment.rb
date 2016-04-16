@@ -19,4 +19,8 @@ class Segment < ActiveRecord::Base
   def self.lock_level(max_lock)
     where("lock is null or lock <= ?",max_lock)
   end
+
+  def self.location
+    "#{((street_id.nil? or street.nil?) ? t('noname') : ((street.name.nil? or street.name.empty?) ? t('no-street') : street.name.to_s) + ', ' + (street.city_id.nil? ? t('no-city') : ((street.city.name.nil? or street.city.name.empty?) ? t('no-city') : street.city.name.to_s) + ', ' + street.city.state.name.to_s))}"
+  end
 end
