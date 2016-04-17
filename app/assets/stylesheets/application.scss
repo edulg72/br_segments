@@ -1,7 +1,13 @@
+$body-bg: #f2f3f4;
+$btn-default-bg: #bedce5;
+$panel-default-heading-bg: $btn-default-bg;
+$state-info-bg: #93c4d3;
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "map";
 body { padding-top: 65px; }
+a:visited:not(.btn) { color: #999; }
 footer {
   margin-top: 10px;
   padding-top: 5px;

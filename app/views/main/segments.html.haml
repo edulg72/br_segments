@@ -26,13 +26,15 @@
             %thead
               %tr
                 %th.text-center{:width => "100", 'data-toggle' => "tooltip", 'data-placement' => "top", :title => "Quantidade de segmentos próximos com problemas semelhantes"}= t('density')
+                %th Tipo
                 %th Localiza&ccedil;&atilde;o do Segmento
             %tbody
               - @area.segments.drivable.disconnected.order('dc_density desc').each do |segment|
                 %tr
                   %td.text-center= segment.dc_density
+                  %td= roadtype_name(segment.roadtype)
                   %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= "#{((segment.street_id.nil? or segment.street.nil?) ? t('noname') : ((segment.street.name.nil? or segment.street.name.empty?) ? t('no-street') : segment.street.name.to_s) + ', ' + (segment.street.city_id.nil? ? t('no-city') : ((segment.street.city.name.nil? or segment.street.city.name.empty?) ? t('no-city') : segment.street.city.name.to_s) + ', ' + (segment.street.city.state.nil? ? t('no-state') : segment.street.city.state.name.to_s)))}"
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
     - if @area.segments.weird_level.size > 0
       .panel.panel-default
         #level.panel-heading{:role => "tab"}
@@ -51,7 +53,7 @@
                 %tr
                   %td.text-center= segment.level
                   %td
-                    %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= "#{((segment.street_id.nil? or segment.street.nil?) ? t('noname') : ((segment.street.name.nil? or segment.street.name.empty?) ? t('no-street') : segment.street.name.to_s) + ', ' + (segment.street.city_id.nil? ? t('no-city') : ((segment.street.city.name.nil? or segment.street.city.name.empty?) ? t('no-city') : segment.street.city.name.to_s) + ', ' + (segment.street.city.state.nil? ? t('no-state') : segment.street.city.state.name.to_s)))}"
+                    %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.location
     - if @area.segments.no_name.size > 0
       .panel.panel-default
         #noname.panel-heading{:role => "tab"}
@@ -95,7 +97,7 @@
                 %tr
                   %td= roadtype_name(segment.roadtype)
                   %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= "#{((segment.street_id.nil? or segment.street.nil?) ? t('noname') : ((segment.street.name.nil? or segment.street.name.empty?) ? t('no-street') : segment.street.name.to_s) + ', ' + (segment.street.city_id.nil? ? t('no-city') : ((segment.street.city.name.nil? or segment.street.city.name.empty?) ? t('no-city') : segment.street.city.name.to_s) + ', ' + (segment.street.city.state.nil? ? t('no-state') : segment.street.city.state.name.to_s)))}"
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
     - if @area.segments.where(roadtype: 15).size > 0
       .panel.panel-default
         #ferry.panel-heading{:role => "tab"}
@@ -114,4 +116,4 @@
                 %tr
                   %td= roadtype_name(segment.roadtype)
                   %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= "#{((segment.street_id.nil? or segment.street.nil?) ? t('noname') : ((segment.street.name.nil? or segment.street.name.empty?) ? t('no-street') : segment.street.name.to_s) + ', ' + (segment.street.city_id.nil? ? t('no-city') : ((segment.street.city.name.nil? or segment.street.city.name.empty?) ? t('no-city') : segment.street.city.name.to_s) + ', ' + (segment.street.city.state.nil? ? t('no-state') : segment.street.city.state.name.to_s)))}"
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location

@@ -11,7 +11,7 @@
         .container
           .row
             .col-sm-8.col-md-8.col-lg-8
-              %h4= t('app-title')
+              %h3= t('app-title')
             .col-sm-4.col-md-4.col-lg-4
               %ol.breadcrumb.text-right
                 - for i in 0...@nav.size
@@ -25,6 +25,12 @@
         .row
           .span12
             = yield
+        .row
+          .btn-group.btn-group-justified
+            %a.btn.btn-default{:href => 'http://www.waze.com'} Conheça o Waze
+            %a.btn.btn-default{:href => 'http://forum.wazebrasil.com'} Fórum Brasil
+            %a.btn.btn-default{:href => 'http://wiki.waze.com'} Wiki
+            %a.btn.btn-default{:href => 'http://painel.wazebrasil.com'} Painel de Controle
     %footer.container
       .row
         .span12

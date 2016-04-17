@@ -3,8 +3,8 @@ class Segment < ActiveRecord::Base
   self.primary_key = 'id'
 
   belongs_to :editor, foreign_key: 'last_edit_by', class_name: 'User'
-  belongs_to :street, -> { includes :city }
-  belongs_to :city, -> {includes :state}, foreign_key: 'city_id', class_name: 'CityShape'
+  belongs_to :street
+  belongs_to :city, foreign_key: 'city_id', class_name: 'CityShape'
 
   scope :drivable, -> {where(roadtype: [1,2,3,4,6,7,8,15,17,20])}
   scope :important, -> {where(roadtype: [3,4,6,7])}
@@ -21,7 +21,7 @@ class Segment < ActiveRecord::Base
     where("lock is null or lock <= ?",max_lock)
   end
 
-  def self.location
-    "#{((street_id.nil? or street.nil?) ? t('noname') : ((street.name.nil? or street.name.empty?) ? t('no-street') : street.name.to_s) + ', ' + (street.city_id.nil? ? t('no-city') : ((street.city.name.nil? or street.city.name.empty?) ? t('no-city') : street.city.name.to_s) + ', ' + street.city.state.name.to_s))}"
+  def location
+    "#{((street_id.nil? or street.nil?) ? I18n.t('noname') : ((street.name.nil? or street.name.empty?) ? I18n.t('no-street') : street.name.to_s) + ', ' + (street.city_id.nil? ? I18n.t('no-city') : ((street.city.name.nil? or street.city.name.empty?) ? I18n.t('no-city') : street.city.name.to_s) + ', ' + ((street.city.state_id.nil? or street.city.state.name.empty?) ? I18n.t('no-state') : street.city.state.name.to_s)))}"
   end
 end
