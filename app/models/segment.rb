@@ -7,7 +7,7 @@ class Segment < ActiveRecord::Base
   belongs_to :city, foreign_key: 'city_id', class_name: 'CityShape'
 
   scope :drivable, -> {where(roadtype: [1,2,3,4,6,7,8,15,17,20])}
-  scope :important, -> {where(roadtype: [3,4,6,7])}
+  scope :important, -> {where(roadtype: [3,2,6,7])}
   scope :roads, -> {where(roadtype: [3,6,7])}
   scope :disconnected, -> {where('not connected')}
   scope :no_name, -> {where('street_id is null and not validated')}
@@ -22,6 +22,6 @@ class Segment < ActiveRecord::Base
   end
 
   def location
-    "#{((street_id.nil? or street.nil?) ? I18n.t('noname') : ((street.name.nil? or street.name.empty?) ? I18n.t('no-street') : street.name.to_s) + ', ' + (street.city_id.nil? ? I18n.t('no-city') : ((street.city.name.nil? or street.city.name.empty?) ? I18n.t('no-city') : street.city.name.to_s) + ', ' + ((street.city.state_id.nil? or street.city.state.name.empty?) ? I18n.t('no-state') : street.city.state.name.to_s)))}"
+    "#{((street_id.nil? or street.nil?) ? I18n.t('noname') : ((street.name.nil? or street.name.empty?) ? I18n.t('no-street') : street.name.to_s) + ', ' + ((street.city_id.nil? or street.city.nil?) ? I18n.t('no-city') : ((street.city.name.nil? or street.city.name.empty?) ? I18n.t('no-city') : street.city.name.to_s) + ', ' + ((street.city.state_id.nil? or street.city.state.name.empty?) ? I18n.t('no-state') : street.city.state.name.to_s)))}"
   end
 end

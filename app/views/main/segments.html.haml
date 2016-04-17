@@ -18,7 +18,7 @@
         #disconnected.panel-heading{:role => "tab"}
           %h4.panel-title
             %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
-              Segmentos desconectados
+              = t('disconnected')
               %small ou com convers&otilde;es desativadas
               %span.badge= @area.segments.drivable.disconnected.size
         #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
@@ -40,7 +40,7 @@
         #level.panel-heading{:role => "tab"}
           %h4.panel-title
             %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
-              Segmentos com eleva&ccedil;&otilde;es "exageradas"
+              = t('level')
               %span.badge= @area.segments.weird_level.size
         #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
           %table.table.table-condensed.table-hover
@@ -59,7 +59,7 @@
         #noname.panel-heading{:role => "tab"}
           %h4.panel-title
             %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"}
-              Segmentos sem nome
+              = t('noname')
               %span.badge= @area.segments.no_name.size
         #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}
           %table.table.table-condensed.table-hover
@@ -84,7 +84,7 @@
         #without-speed.panel-heading{:role => "tab"}
           %h4.panel-title
             %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#without-speed-body", 'aria-expanded' => "true", 'aria-controls' => "without-speed-body"}
-              Segmentos importantes sem velocidade
+              = t('without-speed')
               %span.badge= @area.segments.important.without_speed.size
         #without-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "without-speed"}
           %table.table.table-condensed.table-hover

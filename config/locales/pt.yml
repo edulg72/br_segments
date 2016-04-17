@@ -24,12 +24,13 @@ pt:
   density: "Densidade"
   disconnected: "Segmentos desconectados"
   ferries: "Balsas"
+  level: 'Segmentos com elevações "exageradas"'
   nav-first-page: "Principal"
   no-city: "Sem cidade"
   no-street: "Sem nome de rua"
   noname: "Segmento sem nome"
   updated-at: "Atualizado em"
-  without-speed: "Rodovias sem velocidade"
+  without-speed: "Segmentos importantes sem velocidade"
 
   # Road types
   freeway: "Expressa"
