@@ -31,6 +31,7 @@ pt:
   noname: "Segmento sem nome"
   updated-at: "Atualizado em"
   without-speed: "Segmentos importantes sem velocidade"
+  wrong-city: "Segmentos com município errado"
 
   # Road types
   freeway: "Expressa"

@@ -10,7 +10,7 @@ class MainController < ApplicationController
   def segments
     @area = CityShape.find(params['id'])
     @update = Update.find(@area.state.abbreviation)
-    @nav = [{@area.name => "#"},{@area.state.nm_estado => "/segments_state/#{@area.state.cd_geocuf}"},{ t('nav-first-page') => '/'}]
+    @nav = [{@area.name => "#"},{@area.state.nm_estado => "/segments_state/#{@area.state.abbreviation}"},{ t('nav-first-page') => '/'}]
   end
 
   def segments_state
