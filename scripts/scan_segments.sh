@@ -2265,3 +2265,6 @@ psql -h localhost -d wazedb -U waze -c "refresh materialized view vw_segments; r
 psql -h localhost -d wazedb -U waze -c 'vacuum analyze;'
 
 echo "End: $(date '+%d/%m/%Y %H:%M:%S')"
+
+wget --spider -t 4 -O /dev/null http://segments.edulg.com.br/
+wget --spider -t 4 -O /dev/null http://segments.edulg.com.br/segments_area/$3
