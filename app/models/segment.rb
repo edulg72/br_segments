@@ -17,6 +17,7 @@ class Segment < ActiveRecord::Base
   scope :no_roundabout, -> {where('roundabout is null or not roundabout')}
   scope :weird_level, -> {where('level < -3 or level > 3')}
   scope :wrong_city, -> {joins([street: :city], :city).where("cities.name <> '' and not (upper(cities.name) = upper(cities_shapes.nm_municip) or upper(cities.name) like '%('||upper(cities_shapes.nm_municip)||')%')")}
+  scope :long_streets, -> {where('roadtype = 1 and length > 1500')}
 
   def self.lock_level(max_lock)
     where("lock is null or lock <= ?",max_lock)

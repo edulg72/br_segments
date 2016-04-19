@@ -72,15 +72,15 @@
                       %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
                       %span.badge= s.segments.where(roadtype: 15).count
           .panel.panel-default
-            #wrong-city.panel-heading{:role => "tab"}
+            #long-streets.panel-heading{:role => "tab"}
               %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#wrong-city-body", 'aria-expanded' => "true", 'aria-controls' => "wrong-city-body"}
-                  =t('wrong-city')
-                  %span.badge.text-right= @segments.wrong_city.count
-            #wrong-city-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "wrong-city"}
+                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#long-streets-body", 'aria-expanded' => "true", 'aria-controls' => "long-streets-body"}
+                  =t('long-streets')
+                  %span.badge.text-right= @segments.long_streets.count
+            #long-streets-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "long-streets"}
               %ul.list-group
                 - @states.order('nm_estado').each do |s|
-                  - if s.segments.wrong_city.count > 0
+                  - if s.segments.long_streets.count > 0
                     %li.list-group-item
                       %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.wrong_city.count
+                      %span.badge= s.segments.long_streets.count

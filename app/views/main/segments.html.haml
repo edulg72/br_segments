@@ -117,24 +117,22 @@
                   %td= roadtype_name(segment.roadtype)
                   %td
                     %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
-    - if @area.segments.wrong_city.size > 0
+    - if @area.segments.long_streets.size > 0
       .panel.panel-default
-        #wrong-city.panel-heading{:role => "tab"}
+        #long-streets.panel-heading{:role => "tab"}
           %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#wrong-city-body", 'aria-expanded' => "true", 'aria-controls' => "wrong-city-body"}
-              = t('wrong-city')
-              %span.badge= @area.segments.wrong_city.size
-        #wrong-city-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "wrong-city"}
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#long-streets-body", 'aria-expanded' => "true", 'aria-controls' => "long-streets-body"}
+              = t('long-streets')
+              %span.badge= @area.segments.long_streets.size
+        #long-streets-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "long-streets"}
           %table.table.table-condensed.table-hover
             %thead
               %tr
-                %th Tipo
                 %th Localiza&ccedil;&atilde;o do Segmento
-                %th Município IBGE
+                %th Comprimento (m)
             %tbody
-              - @area.segments.wrong_city.order("cities_shapes.nm_municip").each do |segment|
+              - @area.segments.long_streets.order("length desc").each do |segment|
                 %tr
-                  %td= roadtype_name(segment.roadtype)
                   %td
                     %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
-                  %td= "#{segment.city.nm_municip}, #{segment.city.state.abbreviation}"
+                  %td.text-center= segment.length

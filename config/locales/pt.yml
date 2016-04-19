@@ -25,6 +25,7 @@ pt:
   disconnected: "Segmentos desconectados"
   ferries: "Balsas"
   level: 'Segmentos com elevações "exageradas"'
+  long-streets: "Ruas muito longas"
   nav-first-page: "Principal"
   no-city: "Sem cidade"
   no-street: "Sem nome de rua"
