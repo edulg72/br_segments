@@ -136,3 +136,43 @@
                   %td
                     %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                   %td.text-center= segment.length
+    - if @area.segments.toll.size > 0
+      .panel.panel-default
+        #toll.panel-heading{:role => "tab"}
+          %h4.panel-title
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#toll-body", 'aria-expanded' => "true", 'aria-controls' => "toll-body"}
+              = t('toll')
+              %span.badge= @area.segments.toll.size
+        #toll-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "toll"}
+          %table.table.table-condensed.table-hover
+            %thead
+              %tr
+                %th Localiza&ccedil;&atilde;o do Segmento
+                %th Tipo
+            %tbody
+              - @area.segments.toll.order("length desc").each do |segment|
+                %tr
+                  %td
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                  %td= roadtype_name(segment.roadtype)
+    - if @area.segments.low_lock.size > 0
+      .panel.panel-default
+        #low-lock.panel-heading{:role => "tab"}
+          %h4.panel-title
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#low-lock-body", 'aria-expanded' => "true", 'aria-controls' => "low-lock-body"}
+              = t('low-lock')
+              %span.badge= @area.segments.low_lock.size
+        #low-lock-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "low-lock"}
+          %table.table.table-condensed.table-hover
+            %thead
+              %tr
+                %th Localiza&ccedil;&atilde;o do Segmento
+                %th Tipo
+                %th Lock
+            %tbody
+              - @area.segments.low_lock.order("length desc").each do |segment|
+                %tr
+                  %td
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                  %td= roadtype_name(segment.roadtype)
+                  %td= segment.lock
