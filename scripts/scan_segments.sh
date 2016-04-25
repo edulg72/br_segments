@@ -2267,4 +2267,4 @@ psql -h localhost -d wazedb -U waze -c 'vacuum analyze;'
 echo "End: $(date '+%d/%m/%Y %H:%M:%S')"
 
 wget --spider -t 4 -O /dev/null http://segments.edulg.com.br/
-wget --spider -t 4 -O /dev/null http://segments.edulg.com.br/segments_area/$3
+wget --spider -t 4 -O /dev/null http://segments.edulg.com.br/segments_state/$3
