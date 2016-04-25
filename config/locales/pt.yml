@@ -31,6 +31,7 @@ pt:
   no-city: "Sem cidade"
   no-street: "Sem nome de rua"
   noname: "Segmento sem nome"
+  stats: "Estatísticas de segmentos"
   toll: "Pedágios"
   updated-at: "Atualizado em"
   without-speed: "Segmentos importantes sem velocidade"
