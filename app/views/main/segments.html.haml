@@ -176,6 +176,27 @@
                     %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                   %td= roadtype_name(segment.roadtype)
                   %td= segment.lock
+    - if @area.segments.named_parking.size > 0
+      .panel.panel-default
+        #named-parking.panel-heading{:role => "tab"}
+          %h4.panel-title
+            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#named-parking-body", 'aria-expanded' => "true", 'aria-controls' => "named-parking-body"}
+              = t('named-parking')
+              %span.badge= @area.segments.named_parking.size
+        #named-parking-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "named-parking"}
+          %table.table.table-condensed.table-hover
+            %thead
+              %tr
+                %th Localiza&ccedil;&atilde;o do Segmento
+                %th Última alteração
+                %th Editor
+            %tbody
+              - @area.segments.named_parking.order("last_edit_on desc").each do |segment|
+                %tr
+                  %td
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                  %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
+                  %td= segment.editor.username
 
     .panel.panel-info
       #stats.panel-heading{:role => 'tab'}
