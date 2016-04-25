@@ -116,7 +116,7 @@
                 %tr
                   %td= roadtype_name(segment.roadtype)
                   %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME', :class => "#{segment.toll ? 'text-primary' : 'text-danger'}"}= segment.location
     - if @area.segments.long_streets.size > 0
       .panel.panel-default
         #long-streets.panel-heading{:role => "tab"}
@@ -176,3 +176,27 @@
                     %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                   %td= roadtype_name(segment.roadtype)
                   %td= segment.lock
+
+    .panel.panel-info
+      #stats.panel-heading{:role => 'tab'}
+        %h4.panel-title.text-center
+          %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#stats-body", 'aria-expanded' => "true", 'aria-controls' => "stats-body"}
+            = t('stats')
+      #stats-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "stats"}
+        %table.table.table-condensed.table-hover
+          %thead
+            %tr
+              %th Tipo
+              %th.text-center Quantidade
+              %th.text-right Quilometros
+          %tbody
+            - @area.segments.select(:roadtype).distinct.order(:roadtype).each do |segment|
+              %tr
+                %td= roadtype_name(segment.roadtype)
+                %td.text-center= @area.segments.where(roadtype: segment.roadtype).count
+                %td.text-right= '%.02f' % (@area.segments.where(roadtype: segment.roadtype).sum(:length) / 1000.0)
+          %tfooter
+            %tr
+              %th Total
+              %th.text-center= @area.segments.count
+              %th.text-right= '%.02f' % (@area.segments.sum(:length) / 1000.0)
