@@ -74,7 +74,7 @@
                   %th &Uacute;ltima edi&ccedil;&atilde;o
                   %th Editor
               %tbody
-                - @area.segments.no_name.order("last_edit_on").each do |segment|
+                - @area.segments.no_name.order("last_edit_on").limit(5000).each do |segment|
                   %tr
                     %td
                       %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.id
@@ -97,7 +97,7 @@
                   %th Tipo
                   %th Localiza&ccedil;&atilde;o do Segmento
               %tbody
-                - @area.segments.important.without_speed.order("roadtype").each do |segment|
+                - @area.segments.important.without_speed.limit(5000).order("roadtype").each do |segment|
                   %tr
                     %td= roadtype_name(segment.roadtype)
                     %td
