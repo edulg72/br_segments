@@ -14,189 +14,198 @@
       %small= "#{t('updated-at')} #{ @update.updated_at.strftime('%d/%m/%Y %H:%M')}"
   #accordion.panel-group{:role => "tablist", 'aria-multiselecttable' => "true"}
     - if @area.segments.drivable.disconnected.size > 0
-      .panel.panel-default
-        #disconnected.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
-              = t('disconnected')
-              %small ou com convers&otilde;es desativadas
-              %span.badge= @area.segments.drivable.disconnected.size
-        #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th.text-center{:width => "100", 'data-toggle' => "tooltip", 'data-placement' => "top", :title => "Quantidade de segmentos próximos com problemas semelhantes"}= t('density')
-                %th Tipo
-                %th Localiza&ccedil;&atilde;o do Segmento
-            %tbody
-              - @area.segments.drivable.disconnected.order('dc_density desc').each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'dc'] do
+        .panel.panel-default
+          #disconnected.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
+                = t('disconnected')
+                %small ou com convers&otilde;es desativadas
+                %span.badge= @area.segments.drivable.disconnected.size
+          #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td.text-center= segment.dc_density
-                  %td= roadtype_name(segment.roadtype)
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                  %th.text-center{:width => "100", 'data-toggle' => "tooltip", 'data-placement' => "top", :title => "Quantidade de segmentos próximos com problemas semelhantes"}= t('density')
+                  %th Tipo
+                  %th Localiza&ccedil;&atilde;o do Segmento
+              %tbody
+                - @area.segments.drivable.disconnected.order('dc_density desc').each do |segment|
+                  %tr
+                    %td.text-center= segment.dc_density
+                    %td= roadtype_name(segment.roadtype)
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
     - if @area.segments.weird_level.size > 0
-      .panel.panel-default
-        #level.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
-              = t('level')
-              %span.badge= @area.segments.weird_level.size
-        #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th.text-center{:width => '100'} Eleva&ccedil;&atilde;o
-                %th Localiza&ccedil;&atilde;o do Segmento
-            %tbody
-              - @area.segments.weird_level.order("level desc").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'level'] do
+        .panel.panel-default
+          #level.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
+                = t('level')
+                %span.badge= @area.segments.weird_level.size
+          #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td.text-center= segment.level
-                  %td
-                    %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.location
+                  %th.text-center{:width => '100'} Eleva&ccedil;&atilde;o
+                  %th Localiza&ccedil;&atilde;o do Segmento
+              %tbody
+                - @area.segments.weird_level.order("level desc").each do |segment|
+                  %tr
+                    %td.text-center= segment.level
+                    %td
+                      %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.location
     - if @area.segments.no_name.size > 0
-      .panel.panel-default
-        #noname.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"}
-              = t('noname')
-              %span.badge= @area.segments.no_name.size
-        #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th.text-center{:width => '100'} ID
-                %th.text-center Tipo
-                %th Município
-                %th &Uacute;ltima edi&ccedil;&atilde;o
-                %th Editor
-            %tbody
-              - @area.segments.no_name.order("last_edit_on").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'noname'] do
+        .panel.panel-default
+          #noname.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"}
+                = t('noname')
+                %span.badge= @area.segments.no_name.size
+          #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td
-                    %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.id
-                  %td= roadtype_name(segment.roadtype)
-                  %td= segment.city.nm_municip
-                  %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
-                  %td= "#{segment.editor.username}(#{segment.editor.rank})"
+                  %th.text-center{:width => '100'} ID
+                  %th.text-center Tipo
+                  %th Município
+                  %th &Uacute;ltima edi&ccedil;&atilde;o
+                  %th Editor
+              %tbody
+                - @area.segments.no_name.order("last_edit_on").each do |segment|
+                  %tr
+                    %td
+                      %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.id
+                    %td= roadtype_name(segment.roadtype)
+                    %td= segment.city.nm_municip
+                    %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
+                    %td= "#{segment.editor.username}(#{segment.editor.rank})"
     - if @area.segments.important.without_speed.size > 0
-      .panel.panel-default
-        #without-speed.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#without-speed-body", 'aria-expanded' => "true", 'aria-controls' => "without-speed-body"}
-              = t('without-speed')
-              %span.badge= @area.segments.important.without_speed.size
-        #without-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "without-speed"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th Tipo
-                %th Localiza&ccedil;&atilde;o do Segmento
-            %tbody
-              - @area.segments.important.without_speed.order("roadtype").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'without_speed'] do
+        .panel.panel-default
+          #without-speed.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#without-speed-body", 'aria-expanded' => "true", 'aria-controls' => "without-speed-body"}
+                = t('without-speed')
+                %span.badge= @area.segments.important.without_speed.size
+          #without-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "without-speed"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td= roadtype_name(segment.roadtype)
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                  %th Tipo
+                  %th Localiza&ccedil;&atilde;o do Segmento
+              %tbody
+                - @area.segments.important.without_speed.order("roadtype").each do |segment|
+                  %tr
+                    %td= roadtype_name(segment.roadtype)
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
     - if @area.segments.where(roadtype: 15).size > 0
-      .panel.panel-default
-        #ferry.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#ferry-body", 'aria-expanded' => "true", 'aria-controls' => "ferry-body"}
-              = t('ferries')
-              %span.badge= @area.segments.where(roadtype: 15).size
-        #ferry-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "ferry"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th Tipo
-                %th Localiza&ccedil;&atilde;o do Segmento
-            %tbody
-              - @area.segments.where(roadtype: 15).order("roadtype").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'ferry'] do
+        .panel.panel-default
+          #ferry.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#ferry-body", 'aria-expanded' => "true", 'aria-controls' => "ferry-body"}
+                = t('ferries')
+                %span.badge= @area.segments.where(roadtype: 15).size
+          #ferry-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "ferry"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td= roadtype_name(segment.roadtype)
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME', :class => "#{segment.toll ? 'text-primary' : 'text-danger'}"}= segment.location
+                  %th Tipo
+                  %th Localiza&ccedil;&atilde;o do Segmento
+              %tbody
+                - @area.segments.where(roadtype: 15).order("roadtype").each do |segment|
+                  %tr
+                    %td= roadtype_name(segment.roadtype)
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME', :class => "#{segment.toll ? 'text-primary' : 'text-danger'}"}= segment.location
     - if @area.segments.long_streets.size > 0
-      .panel.panel-default
-        #long-streets.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#long-streets-body", 'aria-expanded' => "true", 'aria-controls' => "long-streets-body"}
-              = t('long-streets')
-              %span.badge= @area.segments.long_streets.size
-        #long-streets-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "long-streets"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th Localiza&ccedil;&atilde;o do Segmento
-                %th Comprimento (m)
-            %tbody
-              - @area.segments.long_streets.order("length desc").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'long_streets'] do
+        .panel.panel-default
+          #long-streets.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#long-streets-body", 'aria-expanded' => "true", 'aria-controls' => "long-streets-body"}
+                = t('long-streets')
+                %span.badge= @area.segments.long_streets.size
+          #long-streets-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "long-streets"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
-                  %td.text-center= segment.length
+                  %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Comprimento (m)
+              %tbody
+                - @area.segments.long_streets.order("length desc").each do |segment|
+                  %tr
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td.text-center= segment.length
     - if @area.segments.toll.size > 0
-      .panel.panel-default
-        #toll.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#toll-body", 'aria-expanded' => "true", 'aria-controls' => "toll-body"}
-              = t('toll')
-              %span.badge= @area.segments.toll.size
-        #toll-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "toll"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th Localiza&ccedil;&atilde;o do Segmento
-                %th Tipo
-            %tbody
-              - @area.segments.toll.order("length desc").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'toll'] do
+        .panel.panel-default
+          #toll.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#toll-body", 'aria-expanded' => "true", 'aria-controls' => "toll-body"}
+                = t('toll')
+                %span.badge= @area.segments.toll.size
+          #toll-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "toll"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
-                  %td= roadtype_name(segment.roadtype)
+                  %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Tipo
+              %tbody
+                - @area.segments.toll.order("length desc").each do |segment|
+                  %tr
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td= roadtype_name(segment.roadtype)
     - if @area.segments.low_lock.size > 0
-      .panel.panel-default
-        #low-lock.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#low-lock-body", 'aria-expanded' => "true", 'aria-controls' => "low-lock-body"}
-              = t('low-lock')
-              %span.badge= @area.segments.low_lock.size
-        #low-lock-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "low-lock"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th Localiza&ccedil;&atilde;o do Segmento
-                %th Tipo
-                %th Lock
-            %tbody
-              - @area.segments.low_lock.order("length desc").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'low_lock'] do
+        .panel.panel-default
+          #low-lock.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#low-lock-body", 'aria-expanded' => "true", 'aria-controls' => "low-lock-body"}
+                = t('low-lock')
+                %span.badge= @area.segments.low_lock.size
+          #low-lock-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "low-lock"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
-                  %td= roadtype_name(segment.roadtype)
-                  %td= segment.lock
+                  %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Tipo
+                  %th Lock
+              %tbody
+                - @area.segments.low_lock.order("length desc").each do |segment|
+                  %tr
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td= roadtype_name(segment.roadtype)
+                    %td= segment.lock
     - if @area.segments.named_parking.size > 0
-      .panel.panel-default
-        #named-parking.panel-heading{:role => "tab"}
-          %h4.panel-title
-            %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#named-parking-body", 'aria-expanded' => "true", 'aria-controls' => "named-parking-body"}
-              = t('named-parking')
-              %span.badge= @area.segments.named_parking.size
-        #named-parking-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "named-parking"}
-          %table.table.table-condensed.table-hover
-            %thead
-              %tr
-                %th Localiza&ccedil;&atilde;o do Segmento
-                %th Última alteração
-                %th Editor
-            %tbody
-              - @area.segments.named_parking.order("last_edit_on desc").each do |segment|
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'named_parking'] do
+        .panel.panel-default
+          #named-parking.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#named-parking-body", 'aria-expanded' => "true", 'aria-controls' => "named-parking-body"}
+                = t('named-parking')
+                %span.badge= @area.segments.named_parking.size
+          #named-parking-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "named-parking"}
+            %table.table.table-condensed.table-hover
+              %thead
                 %tr
-                  %td
-                    %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
-                  %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
-                  %td= segment.editor.username
+                  %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Última alteração
+                  %th Editor
+              %tbody
+                - @area.segments.named_parking.order("last_edit_on desc").each do |segment|
+                  %tr
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
+                    %td= segment.editor.username
 
     .panel.panel-info
       #stats.panel-heading{:role => 'tab'}
