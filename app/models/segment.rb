@@ -32,6 +32,6 @@ class Segment < ActiveRecord::Base
 #  end
 
   def location
-    "#{((street_id.nil? or street.nil?) ? I18n.t('noname') : ((street.name.nil? or street.name.empty?) ? I18n.t('no-street') : street.name.to_s) + ', ' + ((street.city_id.nil? or street.city.nil?) ? I18n.t('no-city') : ((street.city.name.nil? or street.city.name.empty?) ? I18n.t('no-city') : street.city.name.to_s) + ', ' + ((street.city.state_id.nil? or street.city.state.name.empty?) ? I18n.t('no-state') : street.city.state.name.to_s)))}"
+    "#{((street_id.nil? or street.nil?) ? I18n.t('noname') : (street.isempty? ? I18n.t('no-street') : street.name.to_s) + ', ' + (street.city_id.nil? ? I18n.t('no-city') : (street.city_isempty? ? I18n.t('no-city') : street.city_name.to_s) + ', ' + ((street.state_id.nil? or street.state_name.empty?) ? I18n.t('no-state') : street.state_name.to_s)))}"
   end
 end

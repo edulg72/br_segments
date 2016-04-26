@@ -97,7 +97,7 @@
                   %th Tipo
                   %th Localiza&ccedil;&atilde;o do Segmento
               %tbody
-                - @area.segments.important.without_speed.limit(5000).order("roadtype").each do |segment|
+                - @area.segments.important.without_speed.limit(5000).order("roadtype desc").each do |segment|
                   %tr
                     %td= roadtype_name(segment.roadtype)
                     %td
