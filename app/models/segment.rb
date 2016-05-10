@@ -15,6 +15,7 @@ class Segment < ActiveRecord::Base
   scope :without_name, -> {joins('left outer join vw_streets on vw_streets.id = vw_segments.street_id').where('(street_id is null or vw_streets.isempty) and not alt_names')}
   scope :with_speed, -> {where('(not fwddirection or fwdmaxspeed is not null) and (not revdirection or revmaxspeed is not null)')}
   scope :without_speed, -> {where('((fwddirection and fwdmaxspeed is null) or (revdirection and revmaxspeed is null))')}
+  scope :wrong_speed, -> {joins(:street).where("vw_streets.name !~* '^[[:alpha:]]{2,3}-[[:digit:]]{3}.*' and ((fwddirection and fwdmaxspeed > 70) or (revdirection and revmaxspeed > 70))")}
   scope :no_roundabout, -> {where('roundabout is null or not roundabout')}
   scope :weird_level, -> {where('level < -3 or level > 3')}
   scope :wrong_city, -> {joins([street: :city], :city).where("cities.name <> '' and not (upper(cities.name) = upper(cities_shapes.nm_municip) or upper(cities.name) like '%('||upper(cities_shapes.nm_municip)||')%')")}
