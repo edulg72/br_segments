@@ -59,6 +59,19 @@
                       %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
                       %span.badge= s.segments.important.without_speed.count
           .panel.panel-default
+            #wrong-speed.panel-heading{:role => "tab"}
+              %h4.panel-title
+                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#wrong-speed-body", 'aria-expanded' => "true", 'aria-controls' => "wrong-speed-body"}
+                  =t('wrong-speed')
+                  %span.badge.text-right= @segments.wrong_speed.count
+            #wrong-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "wrong-speed"}
+              %ul.list-group
+                - @states.order('nm_estado').each do |s|
+                  - if s.segments.wrong_speed.count > 0
+                    %li.list-group-item
+                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                      %span.badge= s.segments.wrong_speed.count
+          .panel.panel-default
             #ferry.panel-heading{:role => "tab"}
               %h4.panel-title
                 %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#ferry-body", 'aria-expanded' => "true", 'aria-controls' => "ferry-body"}

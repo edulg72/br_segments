@@ -37,6 +37,7 @@ pt:
   updated-at: "Atualizado em"
   without-speed: "Segmentos importantes sem velocidade"
   wrong-city: "Segmentos com município errado"
+  wrong-speed: "Possível erro de velocidade"
 
   # Road types
   freeway: "Expressa"

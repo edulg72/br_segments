@@ -102,6 +102,32 @@
                     %td= roadtype_name(segment.roadtype)
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+
+    - if @area.segments.wrong_speed.size > 0
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'wrong_speed'] do
+        .panel.panel-default
+          #wrong-speed.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#wrong-speed-body", 'aria-expanded' => "true", 'aria-controls' => "wrong-speed-body"}
+                = t('wrong-speed')
+                %span.badge= @area.segments.wrong_speed.size
+          #wrong-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "wrong-speed"}
+            %table.table.table-condensed.table-hover
+              %thead
+                %tr
+                  %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Tipo
+                  %th A &rarr; B
+                  %th B &rarr; A
+              %tbody
+                - @area.segments.wrong_speed.limit(5000).order("city_id, latitude, longitude").each do |segment|
+                  %tr
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td= roadtype_name(segment.roadtype)
+                    %td= (segment.fwddirection ? segment.fwdmaxspeed : '--' )
+                    %td= (segment.revdirection ? segment.revmaxspeed : '--' )
+
     - if @area.segments.where(roadtype: 15).size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'ferry'] do
         .panel.panel-default
@@ -122,6 +148,7 @@
                     %td= roadtype_name(segment.roadtype)
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME', :class => "#{segment.toll ? 'text-primary' : 'text-danger'}"}= segment.location
+
     - if @area.segments.long_streets.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'long_streets'] do
         .panel.panel-default
@@ -142,6 +169,7 @@
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                     %td.text-center= segment.length
+
     - if @area.segments.toll.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'toll'] do
         .panel.panel-default
@@ -162,6 +190,7 @@
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                     %td= roadtype_name(segment.roadtype)
+
     - if @area.segments.low_lock.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'low_lock'] do
         .panel.panel-default
@@ -184,6 +213,7 @@
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                     %td= roadtype_name(segment.roadtype)
                     %td= segment.lock
+
     - if @area.segments.named_parking.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'named_parking'] do
         .panel.panel-default
