@@ -184,12 +184,14 @@
                 %tr
                   %th Localiza&ccedil;&atilde;o do Segmento
                   %th Tipo
+                  %th Atualizado em
               %tbody
-                - @area.segments.toll.order("length desc").each do |segment|
+                - @area.segments.toll.order("last_edit_on desc").each do |segment|
                   %tr
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                     %td= roadtype_name(segment.roadtype)
+                    %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
 
     - if @area.segments.low_lock.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'low_lock'] do
