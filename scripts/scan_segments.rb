@@ -67,32 +67,32 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
         json = JSON.parse(wme.body)
 
         # Get users data
-        json['users']['objects'].each {|u| @users[u['id']] = "#{u['id']},\"#{u['userName']}\",#{u['rank']+1}\n" if not @users.has_key?(u['id']) }
+        json['users']['objects'].each {|u| @users[u['id']] = "#{u['id']},\"#{u['userName'].nil? ? u['userName'] : u['userName'][0..49]}\",#{u['rank']+1}\n" if not @users.has_key?(u['id']) }
 
         # Get state names
-        json['states']['objects'].each {|s| @states[s['id']] = "#{s['id']},\"#{s['name']}\",#{s['countryID']}\n" if not @states.has_key?(s['id']) }
+        json['states']['objects'].each {|s| @states[s['id']] = "#{s['id']},\"#{s['name'].nil? ? s['name'] : s['name'][0..49]}\",#{s['countryID']}\n" if not @states.has_key?(s['id']) }
 
         # Get city names
-        json['cities']['objects'].each {|c| @cities[c['id']] = "#{c['id']},\"#{c['name']}\",#{c['stateID']},#{c['isEmpty'] ? 'TRUE' : 'FALSE' }\n" if not @cities.has_key?(c['id']) }
+        json['cities']['objects'].each {|c| @cities[c['id']] = "#{c['id']},\"#{c['name'].nil? ? c['name'] : c['name'][0..49]}\",#{c['stateID']},#{c['isEmpty'] ? 'TRUE' : 'FALSE' }\n" if not @cities.has_key?(c['id']) }
 
         # Get street names
-        json['streets']['objects'].each {|s| @streets[s['id']] = "#{s['id']},\"#{s['name']}\",#{s['cityID']},#{s['isEmpty'] ? 'TRUE' : 'FALSE' }\n" if not @streets.has_key?(s['id']) }
+        json['streets']['objects'].each {|s| @streets[s['id']] = "#{s['id']},\"#{s['name'].nil? ? s['name'] : s['name'][0..99].gsub(/"/,'""')}\",#{s['cityID']},#{s['isEmpty'] ? 'TRUE' : 'FALSE' }\n" if not @streets.has_key?(s['id']) }
 
         # Get segments data
         json['segments']['objects'].each do |s|
           (longitude, latitude) = s['geometry']['coordinates'][(s['geometry']['coordinates'].size / 2)]
-          @segments[s['id']] = "#{s['id']},#{longitude},#{latitude},#{s['roadType']},#{s['level']},#{(s['lockRank'].nil? ? '' : s['lockRank'] + 1)},#{(s['updatedOn'].nil? ? s['createdBy'] : s['updatedBy'])},#{(s['updatedOn'].nil? ? Time.at(s['createdOn']/1000) : Time.at(s['updatedOn']/1000))},#{s['primaryStreetID']},#{s['length']},#{((s['fwdDirection'] and s['toConnections'].size > 0) or (s['revDirection'] and s['fromConnections'].size > 0)) ? 'TRUE' : 'FALSE' },#{s['fwdDirection']},#{s['revDirection']},#{s['fwdMaxSpeed']},#{s['revMaxSpeed']},#{(s['junctionID'].nil? ? 'FALSE' : 'TRUE')},#{s['streetIDs'].size > 0},#{s['validated']},#{s['fwdToll'] or s['revToll']}\n" if not @segments.has_key?(s['id'])
+          @segments[s['id']] = "#{s['id']},#{longitude},#{latitude},#{s['roadType']},#{s['level']},#{(s['lockRank'].nil? ? '' : s['lockRank'] + 1)},#{(s['updatedOn'].nil? ? s['createdBy'] : s['updatedBy'])},#{(s['updatedOn'].nil? ? Time.at(s['createdOn']/1000) : Time.at(s['updatedOn']/1000))},#{s['primaryStreetID']},#{s['length']},#{((s['fwdDirection'] and s['toConnections'].size > 0) or (s['revDirection'] and s['fromConnections'].size > 0)) ? 'TRUE' : 'FALSE' },#{s['fwdDirection']},#{s['revDirection']},#{s['fwdMaxSpeed']},#{s['revMaxSpeed']},#{(s['junctionID'].nil? ? 'FALSE' : 'TRUE')},#{s['streetIDs'].size > 0},#{s['validated']},#{s['fwdToll'] or s['revToll'],#{s['flags']}}\n" if not @segments.has_key?(s['id'])
         end
 
       rescue Mechanize::ResponseCodeError, NoMethodError
         # If issue is related to json package size, divide the area by 4 (limited to 3 divisions)
-        if exec < 3
+        if exec < 1
           busca(db,agent,area[0],area[1],area[2],area[3],(passo/2),(exec+1))
         else
           puts "[#{Time.now.strftime('%d/%m/%Y %H:%M:%S')}] - ResponseCodeError em #{area}"
         end
       rescue JSON::ParserError
-        if exec < 3
+        if exec < 1
           sleep(5)
           busca(db,agent,area[0],area[1],area[2],area[3],passo,(exec+1))
         else
@@ -133,7 +133,7 @@ end
 db.exec('vacuum streets')
 
 db.exec("delete from segments where id in (#{@segments.keys.join(',')})") if @segments.size > 0
-db.copy_data('COPY segments (id, longitude, latitude, roadtype, level, lock, last_edit_by, last_edit_on, street_id, length, connected, fwddirection, revdirection, fwdmaxspeed, revmaxspeed, roundabout, alt_names, validated,toll) FROM STDIN CSV') do
+db.copy_data('COPY segments (id, longitude, latitude, roadtype, level, lock, last_edit_by, last_edit_on, street_id, length, connected, fwddirection, revdirection, fwdmaxspeed, revmaxspeed, roundabout, alt_names, validated,toll,flags) FROM STDIN CSV') do
   @segments.each_value {|s| db.put_copy_data s}
 end
 db.exec('vacuum segments')
