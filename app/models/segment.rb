@@ -20,7 +20,7 @@ class Segment < ActiveRecord::Base
   scope :no_roundabout, -> {where('roundabout is null or not roundabout')}
   scope :weird_level, -> {where('level < -3 or level > 3')}
   scope :wrong_city, -> {joins([street: :city], :city).where("cities.name <> '' and not (upper(cities.name) = upper(cities_shapes.nm_municip) or upper(cities.name) like '%('||upper(cities_shapes.nm_municip)||')%')")}
-  scope :long_streets, -> {where('roadtype = 1 and length > 1500')}
+  scope :long_streets, -> {where('roadtype = 1 and (flags & 16) = 0 and length > 1500')}
   scope :toll, -> {where(toll: true)}
   scope :low_lock, -> {where('roadtype in (3,6,7) and lock < 3')}
   scope :named_parking, -> {joins(:street).where('roadtype = 20 and not vw_streets.isempty')}
