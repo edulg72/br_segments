@@ -6,123 +6,132 @@
           = render partial: "mapa"
       .col-sm-12.col-md-6.col-lg-5
         #accordion.panel-group{:role => "tablist", 'aria-multiselecttable' => "true"}
-          .panel.panel-default
-            #disconnected.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
-                  =t('disconnected')
-                  %span.badge.text-right= @segments.drivable.disconnected.count
-            #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.drivable.disconnected.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.drivable.disconnected.count
-          .panel.panel-default
-            #level.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
-                  =t('level')
-                  %span.badge.text-right= @segments.weird_level.count
-            #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.weird_level.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.weird_level.count
-          .panel.panel-default
-            #noname.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"}
-                  =t('noname')
-                  %span.badge.text-right= @segments.no_name.count
-            #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.no_name.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.no_name.count
-          .panel.panel-default
-            #without-speed.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#without-speed-body", 'aria-expanded' => "true", 'aria-controls' => "without-speed-body"}
-                  =t('without-speed')
-                  %span.badge.text-right= @segments.important.without_speed.count
-            #without-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "without-speed"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.important.without_speed.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.important.without_speed.count
-          .panel.panel-default
-            #wrong-speed.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#wrong-speed-body", 'aria-expanded' => "true", 'aria-controls' => "wrong-speed-body"}
-                  =t('wrong-speed')
-                  %span.badge.text-right= @segments.wrong_speed.count
-            #wrong-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "wrong-speed"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.wrong_speed.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.wrong_speed.count
-          .panel.panel-default
-            #ferry.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#ferry-body", 'aria-expanded' => "true", 'aria-controls' => "ferry-body"}
-                  =t('ferries')
-                  %span.badge.text-right= @segments.where(roadtype: 15).count
-            #ferry-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "ferry"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.where(roadtype: 15).count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.where(roadtype: 15).count
-          .panel.panel-default
-            #long-streets.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#long-streets-body", 'aria-expanded' => "true", 'aria-controls' => "long-streets-body"}
-                  =t('long-streets')
-                  %span.badge.text-right= @segments.long_streets.count
-            #long-streets-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "long-streets"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.long_streets.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.long_streets.count
-          .panel.panel-default
-            #toll.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#toll-body", 'aria-expanded' => "true", 'aria-controls' => "toll-body"}
-                  =t('toll')
-                  %span.badge.text-right= @segments.toll.count
-            #toll-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "toll"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.toll.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.toll.count
-          .panel.panel-default
-            #low-lock.panel-heading{:role => "tab"}
-              %h4.panel-title
-                %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#low-lock-body", 'aria-expanded' => "true", 'aria-controls' => "low-lock-body"}
-                  =t('low-lock')
-                  %span.badge.text-right= @segments.low_lock.count
-            #low-lock-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "low-lock"}
-              %ul.list-group
-                - @states.order('nm_estado').each do |s|
-                  - if s.segments.low_lock.count > 0
-                    %li.list-group-item
-                      %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
-                      %span.badge= s.segments.low_lock.count
+          - cache [@update,'dc'] do
+            .panel.panel-default
+              #disconnected.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#disconnected-body", 'aria-expanded' => "true", 'aria-controls' => "disconnected-body"}
+                    =t('disconnected')
+                    %span.badge.text-right= @segments.drivable.disconnected.count
+              #disconnected-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "disconnected"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.drivable.disconnected.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.drivable.disconnected.count
+          - cache [@update,'level'] do
+            .panel.panel-default
+              #level.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#level-body", 'aria-expanded' => "true", 'aria-controls' => "level-body"}
+                    =t('level')
+                    %span.badge.text-right= @segments.weird_level.count
+              #level-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "level"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.weird_level.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.weird_level.count
+          - cache [@update,'noname'] do
+            .panel.panel-default
+              #noname.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#noname-body", 'aria-expanded' => "true", 'aria-controls' => "noname-body"}
+                    =t('noname')
+                    %span.badge.text-right= @segments.no_name.count
+              #noname-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "noname"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.no_name.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.no_name.count
+          - cache [@update,'wospeed'] do
+            .panel.panel-default
+              #without-speed.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#without-speed-body", 'aria-expanded' => "true", 'aria-controls' => "without-speed-body"}
+                    =t('without-speed')
+                    %span.badge.text-right= @segments.important.without_speed.count
+              #without-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "without-speed"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.important.without_speed.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.important.without_speed.count
+          - cache [@update,'wrspeed'] do
+            .panel.panel-default
+              #wrong-speed.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#wrong-speed-body", 'aria-expanded' => "true", 'aria-controls' => "wrong-speed-body"}
+                    =t('wrong-speed')
+                    %span.badge.text-right= @segments.wrong_speed.count
+              #wrong-speed-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "wrong-speed"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.wrong_speed.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.wrong_speed.count
+          - cache [@update,'ferry'] do
+            .panel.panel-default
+              #ferry.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#ferry-body", 'aria-expanded' => "true", 'aria-controls' => "ferry-body"}
+                    =t('ferries')
+                    %span.badge.text-right= @segments.where(roadtype: 15).count
+              #ferry-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "ferry"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.where(roadtype: 15).count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.where(roadtype: 15).count
+          - cache [@update,'long'] do
+            .panel.panel-default
+              #long-streets.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#long-streets-body", 'aria-expanded' => "true", 'aria-controls' => "long-streets-body"}
+                    =t('long-streets')
+                    %span.badge.text-right= @segments.long_streets.count
+              #long-streets-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "long-streets"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.long_streets.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.long_streets.count
+          - cache [@update,'toll'] do
+            .panel.panel-default
+              #toll.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#toll-body", 'aria-expanded' => "true", 'aria-controls' => "toll-body"}
+                    =t('toll')
+                    %span.badge.text-right= @segments.toll.count
+              #toll-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "toll"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.toll.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.toll.count
+          - cache [@update,'low-lock'] do
+            .panel.panel-default
+              #low-lock.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#low-lock-body", 'aria-expanded' => "true", 'aria-controls' => "low-lock-body"}
+                    =t('low-lock')
+                    %span.badge.text-right= @segments.low_lock.count
+              #low-lock-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "low-lock"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.low_lock.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.low_lock.count
           .panel.panel-default
             #named-parking.panel-heading{:role => "tab"}
               %h4.panel-title
