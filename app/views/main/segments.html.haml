@@ -26,6 +26,7 @@
               %thead
                 %tr
                   %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Tipo
                   %th Atualizado em
                   %th Editor
               %tbody
@@ -33,6 +34,7 @@
                   %tr
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td= roadtype_name(segment.roadtype)
                     %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
                     %td= segment.editor.username
 
