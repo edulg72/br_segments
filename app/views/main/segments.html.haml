@@ -13,6 +13,29 @@
                 %a{:href => "/segments/#{c.gid}"}= c.name
       %small= "#{t('updated-at')} #{ @update.updated_at.strftime('%d/%m/%Y %H:%M')}"
   #accordion.panel-group{:role => "tablist", 'aria-multiselecttable' => "true"}
+    - if @area.segments.dirt_street.size > 0
+      - cache [@area.class.to_s,@area.id,@update.updated_at,'dirt'] do
+        .panel.panel-primary
+          #dirt.panel-heading{:role => "tab"}
+            %h4.panel-title
+              %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#dirt-body", 'aria-expanded' => "true", 'aria-controls' => "dirt-body"}
+                = t('dirt-street')
+                %span.badge= @area.segments.dirt_street.size
+          #dirt-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "dirt"}
+            %table.table.table-condensed.table-hover
+              %thead
+                %tr
+                  %th Localiza&ccedil;&atilde;o do Segmento
+                  %th Atualizado em
+                  %th Editor
+              %tbody
+                - @area.segments.dirt_street.order("last_edit_on desc").limit(10000).each do |segment|
+                  %tr
+                    %td
+                      %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+                    %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
+                    %td= segment.editor.username
+
     - if @area.segments.drivable.disconnected.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'dc'] do
         .panel.panel-default
@@ -36,6 +59,7 @@
                     %td= roadtype_name(segment.roadtype)
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+
     - if @area.segments.weird_level.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'level'] do
         .panel.panel-default
@@ -56,6 +80,7 @@
                     %td.text-center= segment.level
                     %td
                       %a{href: "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", target: 'WME'}= segment.location
+
     - if @area.segments.no_name.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'noname'] do
         .panel.panel-default
@@ -82,6 +107,7 @@
                     %td= segment.city.nm_municip
                     %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
                     %td= "#{segment.editor.username}(#{segment.editor.rank})"
+
     - if @area.segments.important.without_speed.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'without_speed'] do
         .panel.panel-default

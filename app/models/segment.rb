@@ -24,6 +24,7 @@ class Segment < ActiveRecord::Base
   scope :toll, -> {where(toll: true)}
   scope :low_lock, -> {where('roadtype in (3,6,7) and lock < 3')}
   scope :named_parking, -> {joins(:street).where('roadtype = 20 and not vw_streets.isempty')}
+  scope :dirt_street, -> {where('roadtype = 1 and (flags & 16) = 16')}
 
   def self.lock_level(max_lock)
     where("lock is null or lock <= ?",max_lock)

@@ -23,6 +23,7 @@ pt:
   app-title: "Segmentos Brasil"
   density: "Densidade"
   disconnected: "Segmentos desconectados"
+  dirt-street: "Ruas marcadas como 'Terra/4x4'"
   ferries: "Balsas"
   level: 'Segmentos com elevações "exageradas"'
   long-streets: "Ruas muito longas"

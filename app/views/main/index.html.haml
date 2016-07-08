@@ -6,6 +6,20 @@
           = render partial: "mapa"
       .col-sm-12.col-md-6.col-lg-5
         #accordion.panel-group{:role => "tablist", 'aria-multiselecttable' => "true"}
+          - cache [@update,'dirt'] do
+            .panel.panel-primary
+              #dirt.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a{:role => "button", 'data-toggle' => "collapse", 'data-parent' => "#accordion", :href => "#dirt-body", 'aria-expanded' => "true", 'aria-controls' => "dirt-body"}
+                    =t('dirt-street')
+                    %span.badge.text-right= @segments.dirt_street.count
+              #dirt-body.panel-collapse.collapse{:role => "tabpanel", 'arialabelledby' => "dirt"}
+                %ul.list-group
+                  - @states.order('nm_estado').each do |s|
+                    - if s.segments.dirt_street.count > 0
+                      %li.list-group-item
+                        %a{:href => "/segments_state/#{s.abbreviation}"}= s.nm_estado
+                        %span.badge= s.segments.dirt_street.count
           - cache [@update,'dc'] do
             .panel.panel-default
               #disconnected.panel-heading{:role => "tab"}
