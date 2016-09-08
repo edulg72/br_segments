@@ -244,7 +244,7 @@
                     %td
                       %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
                     %td= roadtype_name(segment.roadtype)
-                    %td= segment.lock
+                    %td= (segment.lock.nil? ? 'Auto' : segment.lock)
 
     - if @area.segments.named_parking.size > 0
       - cache [@area.class.to_s,@area.id,@update.updated_at,'named_parking'] do

@@ -19,4 +19,9 @@ class MainController < ApplicationController
     @nav = [{@area.nm_estado => '#'},{ t('nav-first-page') => '/'}]
     render :segments
   end
+
+  def search
+    @search = Search.new
+    @states = StateShape.all
+  end
 end
