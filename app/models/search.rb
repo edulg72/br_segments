@@ -1,3 +1,3 @@
-class Search < Activerecord::Base
-  
+class Search < ActiveRecord::Base
+
 end
