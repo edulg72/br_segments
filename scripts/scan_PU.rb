@@ -40,6 +40,8 @@ db.prepare('insert_user','insert into users (id, username, rank) values ($1,$2,$
 #db.prepare('insert_pu','insert into pu (id, created_by, created_on, position, staff, place_id) values ($1,$2,$3,ST_SetSRID(ST_Point($4,$5),4326),$6,$7)')
 db.prepare('insert_place','insert into places (id,name,street_id,created_on,created_by,updated_on,updated_by,position,lock,approved,residential,category,ad_locked,type) values ($1,$2,$3,$4,$5,$6,$7,ST_SetSRID(ST_Point($8,$9),4326),$10,$11,$12,$13,$14,$15)')
 
+@users = {}
+
 def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
   lonStart = longWest
   while lonStart < longEast do
@@ -57,15 +59,7 @@ def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
         json = JSON.parse(wme.body)
 
         # Stores users that edit on this area
-        json['users']['objects'].each do |u|
-          if db.exec_params('select * from users where id = $1',[u['id']]).ntuples == 0
-            begin
-              db.exec_prepared('insert_user', [u['id'],u['userName'],u['rank']+1])
-            rescue PG::UniqueViolation
-              error = true
-            end
-          end
-        end
+        json['users']['objects'].each {|u| @users[u['id']] = "#{u['id']},\"#{u['userName'].nil? ? u['userName'] : u['userName'][0..49]}\",#{u['rank']+1}\n" if not @users.has_key?(u['id']) }
 
         # Stores PUs data from the area
         json['venues']['objects'].each do |v|
@@ -127,3 +121,9 @@ def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
 end
 
 scan_PU(db,agent,LongWest,LatNorth,LongEast,LatSouth,Step,1)
+
+db.exec("delete from users where id in (#{@users.keys.join(',')})") if @users.size > 0
+db.copy_data('COPY users (id,username,rank) FROM STDIN CSV') do
+  @users.each_value {|u| db.put_copy_data u}
+end
+db.exec('vacuum users')
