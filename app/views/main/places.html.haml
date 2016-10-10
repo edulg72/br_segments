@@ -23,8 +23,8 @@
             %td
               %a{:href => "/places/#{place.creator.username}"}= "#{place.creator.username}(#{place.creator.rank})"
             %td
-              - if place.updated_by.nil?
-                "-"
+              - if place.updated_by.nil? or place.editor.nil?
+                = "-"
               - else
                 %a{:href => "/places/#{place.editor.username}"}= "#{place.editor.username}(#{place.editor.rank})"
             %td.text-center= (place.updated_on.nil? ? place.created_on.strftime('%d/%m/%Y %H:%M') : place.updated_on.strftime('%d/%m/%Y %H:%M'))
