@@ -1,6 +1,6 @@
 - cache [@user.id, @update.updated_at] do
   .page-header
-    %h3= @user.username
+    %h3= "#{@user.username} (#{@places.size} places)"
   - if @places.size > 0
     %table.table.table-condensed.table-hover
       %thead
