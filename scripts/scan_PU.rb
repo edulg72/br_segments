@@ -37,10 +37,10 @@ login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "pas
 
 db = PG::Connection.new(:hostaddr => ENV['POSTGRESQL_DB_HOST'], :dbname => ENV['POSTGRESQL_DB_NAME'], :user => ENV['POSTGRESQL_DB_USERNAME'], :password => ENV['POSTGRESQL_DB_PASSWORD'])
 db.prepare('insert_user','insert into users (id, username, rank) values ($1,$2,$3)')
-db.prepare('insert_pu','insert into pu (id, created_by, created_on, position, staff, place_id) values ($1,$2,$3,ST_SetSRID(ST_Point($4,$5),4326),$6,$7)')
+#db.prepare('insert_pu','insert into pu (id, created_by, created_on, position, staff, place_id) values ($1,$2,$3,ST_SetSRID(ST_Point($4,$5),4326),$6,$7)')
 db.prepare('insert_place','insert into places (id,name,street_id,created_on,created_by,updated_on,updated_by,position,lock,approved,residential,category,ad_locked) values ($1,$2,$3,$4,$5,$6,$7,ST_SetSRID(ST_Point($8,$9),4326),$10,$11,$12,$13,$14)')
 
-def scan_UR(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
+def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
   lonStart = longWest
   while lonStart < longEast do
     lonEnd = [((lonStart + step)*100000).to_int/100000.0 , longEast].min
@@ -68,42 +68,42 @@ def scan_UR(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
           if db.exec_params('select id from places where id = $1',[v['id']]).ntuples == 0
             db.exec_prepared('insert_place',[v['id'], v['name'], v['streetID'], (v.has_key?('createdOn') ? Time.at(v['createdOn']/1000) : nil), v['createdBy'], (v.has_key?('updatedOn') ? Time.at(v['updatedOn']/1000) : nil), v['updatedBy'], (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0]), (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1]), v['lockRank'], v['approved'], v['residential'], v['categories'][0], (v.has_key?('adLocked') ? v['adLocked'] : false) ])
           end
-          if v.has_key?('venueUpdateRequests')
-            pu = {'dateAdded' => (Time.now.to_i * 1000)}
-            if v.has_key?('adLocked') and v['adLocked']
-              pu['id']= v['venueUpdateRequests'][0]['id']
-              pu['createdBy']= v['venueUpdateRequests'][0]['createdBy']
-              pu['dateAdded']= v['venueUpdateRequests'][0]['dateAdded']
-              pu['longitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0])
-              pu['latitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1])
-              pu['adLocked']= true
-              pu['placeID']= v['id']
-            else
-              v['venueUpdateRequests'].each do |vu|
-                if vu.has_key?('dateAdded') and vu['dateAdded'] < pu['dateAdded']
-                  pu['id']= v['id']
-                  pu['createdBy']= vu['createdBy']
-                  pu['dateAdded']= vu['dateAdded']
-                  pu['longitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0])
-                  pu['latitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1])
-                  pu['adLocked']= (v.has_key?('adLocked') ? v['adLocked'] : false)
-                  pu['placeID']= v['id']
-                end
-              end
-            end
-            if pu.has_key?('id')
-              begin
-                db.exec_prepared('insert_pu',[pu['id'], pu['createdBy'], Time.at(pu['dateAdded']/1000), pu['longitude'], pu['latitude'], pu['adLocked'], pu['placeID'] ])
-              rescue PG::UniqueViolation
-                puts "#{pu['id']}"
-              end
-            end
-          end
+#          if v.has_key?('venueUpdateRequests')
+#            pu = {'dateAdded' => (Time.now.to_i * 1000)}
+#            if v.has_key?('adLocked') and v['adLocked']
+#              pu['id']= v['venueUpdateRequests'][0]['id']
+#              pu['createdBy']= v['venueUpdateRequests'][0]['createdBy']
+#              pu['dateAdded']= v['venueUpdateRequests'][0]['dateAdded']
+#              pu['longitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0])
+#              pu['latitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1])
+#              pu['adLocked']= true
+#              pu['placeID']= v['id']
+#            else
+#              v['venueUpdateRequests'].each do |vu|
+#                if vu.has_key?('dateAdded') and vu['dateAdded'] < pu['dateAdded']
+#                  pu['id']= v['id']
+#                  pu['createdBy']= vu['createdBy']
+#                  pu['dateAdded']= vu['dateAdded']
+#                  pu['longitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0])
+#                  pu['latitude']= (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1])
+#                  pu['adLocked']= (v.has_key?('adLocked') ? v['adLocked'] : false)
+#                  pu['placeID']= v['id']
+#                end
+#              end
+#            end
+#            if pu.has_key?('id')
+#              begin
+#                db.exec_prepared('insert_pu',[pu['id'], pu['createdBy'], Time.at(pu['dateAdded']/1000), pu['longitude'], pu['latitude'], pu['adLocked'], pu['placeID'] ])
+#              rescue PG::UniqueViolation
+#                puts "#{pu['id']}"
+#              end
+#            end
+#          end
         end
       rescue Mechanize::ResponseCodeError
         # If we had errors with the response size, divides area in four smaller areas (only 3 times)
         if exec < 3
-          scan_UR(db,agent,area[0],area[1],area[2],area[3],(step/2),(exec+1))
+          scan_PU(db,agent,area[0],area[1],area[2],area[3],(step/2),(exec+1))
         else
           puts "[#{Time.now.strftime('%d/%m/%Y %H:%M:%S')}] - ResponseCodeError at #{area}"
         end
@@ -118,4 +118,4 @@ def scan_UR(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
   end
 end
 
-scan_UR(db,agent,LongWest,LatNorth,LongEast,LatSouth,Step,1)
+scan_PU(db,agent,LongWest,LatNorth,LongEast,LatSouth,Step,1)
