@@ -21,7 +21,10 @@
             %td.text-center= place.place_type
             %td.text-center= place.lock
             %td
-              %a{:href => "/places/#{place.creator.username}"}= "#{place.creator.username}(#{place.creator.rank})"
+              - if place.creator.nil?
+                = "-"
+              - else
+                %a{:href => "/places/#{place.creator.username}"}= "#{place.creator.username}(#{place.creator.rank})"
             %td
               - if place.updated_by.nil? or place.editor.nil?
                 = "-"
