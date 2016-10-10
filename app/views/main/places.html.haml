@@ -20,6 +20,6 @@
               %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{place.latitude}&lon=#{place.longitude}&venues=#{place.id}"}= (place.name.nil? ? 'Sem nome' : place.name)
             %td= place.place_type
             %td= place.lock
-            %td= place.creator.name
-            %td= place.editor.name
-            %td= (place.updated_on.nil? ? place.created_on.strftime('%d/%M/%y %H:%M') : place.updated_on.strftime('%d/%M/%y %H:%M'))
+            %td= "#{place.creator.username}(#{place.creator.rank})"
+            %td= "#{place.editor.username}(#{place.creator.rank})"
+            %td= (place.updated_on.nil? ? place.created_on.strftime('%d/%m/%Y %H:%M') : place.updated_on.strftime('%d/%m/%Y %H:%M'))
