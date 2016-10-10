@@ -1,0 +1,5 @@
+#search
+  = form_tag('/search',form-horizontal) do
+    .form-group
+      %label.col-sm-2.col-md-1.col-lg-1.control-label{for: 'state'} Estado
+      = select_tag(:state_id, options_from_collection_for_select(StateShape.all, :cd_geocuf, :nm_estado))

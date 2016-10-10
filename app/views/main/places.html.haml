@@ -1,6 +1,7 @@
 - cache [@user.id, @update.updated_at] do
   .page-header
     %h3= "#{@user.username} (#{@places.size} places)"
+    %small= "#{t('updated-at')} #{ @update.updated_at.strftime('%d/%m/%Y %H:%M')}"
   - if @places.size > 0
     %table.table.table-condensed.table-hover
       %thead
@@ -18,7 +19,7 @@
             %td= place.city.name
             %td
               %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{place.latitude}&lon=#{place.longitude}&venues=#{place.id}", :target => 'WME'}= (place.name.nil? ? 'Sem nome' : place.name)
-            %td.text-center= place.place_type
+            %td.text-center= t("place-#{place.place_type}")
             %td.text-center= place.lock
             %td
               - if place.creator.nil?
