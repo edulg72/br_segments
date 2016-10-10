@@ -3,10 +3,10 @@
 cd /home/rails/segments/scripts
 
 echo "Start: $(date '+%d/%m/%Y %H:%M:%S')"
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'delete from pu;'
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'delete from places;'
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'vacuum pu;'
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'vacuum places;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'delete from pu;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'delete from places;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'vacuum pu;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'vacuum places;'
 
 # SC
 ruby scan_PU.rb $1 $2 -50.61 -25.95 -50.43 -26.04 0.09
@@ -59,10 +59,10 @@ ruby scan_PU.rb $1 $2 -50.25 -29.19 -49.53 -29.28 0.09
 ruby scan_PU.rb $1 $2 -50.16 -29.28 -49.98 -29.37 0.09
 ruby scan_PU.rb $1 $2 -49.89 -29.28 -49.62 -29.37 0.09
 
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'update places set city_id = (select gid from cities_shapes where ST_Contains(geom, places.position) limit 1) where city_id is null;'
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'delete from places where city_id is null;'
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'refresh materialized view vw_places;'
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c "update updates set updated_at = current_timestamp where object = 'places';"
-psql -h $POSTGRESQL_DB_HOST -d $POSTGRESQL_DB_NAME -U $POSTGRESQL_DB_USERNAME -c 'vacuum places;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'update places set city_id = (select gid from cities_shapes where ST_Contains(geom, places.position) limit 1) where city_id is null;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'delete from places where city_id is null;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'refresh materialized view vw_places;'
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c "update updates set updated_at = current_timestamp where object = 'places';"
+psql -h $POSTGRESQL_DB_HOST -d wazedb -U $POSTGRESQL_DB_USERNAME -c 'vacuum places;'
 
 echo "End: $(date '+%d/%m/%Y %H:%M:%S')"
