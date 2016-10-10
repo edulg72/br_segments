@@ -26,7 +26,7 @@ class MainController < ApplicationController
   end
 
   def places
-    @user = User.find_by(username: params['id']).first
+    @user = User.find_by(username: params['id'])
     @update = Update.find('places')
     @places = Place.where('created_by = ? or updated_by = ?',@user.id, @user.id)
   end
