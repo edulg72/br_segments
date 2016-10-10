@@ -52,7 +52,7 @@ def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
       area = [lonStart, latStart, lonEnd, latEnd]
 
       begin
-        wme = agent.get "https://www.waze.com/row-Descartes-live/app/Features?venueLevel=1&venueFilter=1&venueUpdateRequests=true&bbox=#{area.join('%2C')}"
+        wme = agent.get "https://www.waze.com/row-Descartes-live/app/Features?venueLevel=5&venueFilter=1&venueUpdateRequests=true&bbox=#{area.join('%2C')}"
 
         json = JSON.parse(wme.body)
 
