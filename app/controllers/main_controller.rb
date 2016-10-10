@@ -24,4 +24,10 @@ class MainController < ApplicationController
     @search = Search.new
     @states = StateShape.all
   end
+
+  def places
+    @user = User.find_by(username: params['id'])
+    @update = Update.find('places')
+    @places = Place.where('created_by = ? or updated_by = ?',@user.id, @user.id)
+  end
 end

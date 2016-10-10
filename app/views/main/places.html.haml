@@ -1,0 +1,25 @@
+- cache [@user.id, @updated.updated_at] do
+  .page-header
+    %h3= @user.username
+  - if @places.size > 0
+    %table.table.table-condensed.table-hover
+      %thead
+        %tr
+          %th Município
+          %th Local
+          %th Tipo
+          %th Lock
+          %th Criado por
+          %th Editado por
+          %th Última edição
+      %tbody
+        - @places.order('city_id, type, lock').each do |place|
+          %tr
+            %td= place.city.name
+            %td
+              %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{place.latitude}&lon=#{place.longitude}&venues=#{place.id}"}= (place.name.nil? ? 'Sem nome' : place.name)
+            %td= place.type
+            %td= place.lock
+            %td= place.creator.name
+            %td= place.editor.name
+            %td= (place.updated_on.nil? ? place.created_on.strftime('%d/%M/%y %H:%M') : place.updated_on.strftime('%d/%M/%y %H:%M'))

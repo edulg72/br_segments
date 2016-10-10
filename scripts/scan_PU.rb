@@ -38,7 +38,7 @@ login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "pas
 db = PG::Connection.new(:hostaddr => ENV['POSTGRESQL_DB_HOST'], :dbname => ENV['POSTGRESQL_DB_NAME'], :user => ENV['POSTGRESQL_DB_USERNAME'], :password => ENV['POSTGRESQL_DB_PASSWORD'])
 db.prepare('insert_user','insert into users (id, username, rank) values ($1,$2,$3)')
 #db.prepare('insert_pu','insert into pu (id, created_by, created_on, position, staff, place_id) values ($1,$2,$3,ST_SetSRID(ST_Point($4,$5),4326),$6,$7)')
-db.prepare('insert_place','insert into places (id,name,street_id,created_on,created_by,updated_on,updated_by,position,lock,approved,residential,category,ad_locked) values ($1,$2,$3,$4,$5,$6,$7,ST_SetSRID(ST_Point($8,$9),4326),$10,$11,$12,$13,$14)')
+db.prepare('insert_place','insert into places (id,name,street_id,created_on,created_by,updated_on,updated_by,position,lock,approved,residential,category,ad_locked,type) values ($1,$2,$3,$4,$5,$6,$7,ST_SetSRID(ST_Point($8,$9),4326),$10,$11,$12,$13,$14,$15)')
 
 def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
   lonStart = longWest
@@ -66,7 +66,7 @@ def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
         # Stores PUs data from the area
         json['venues']['objects'].each do |v|
           if db.exec_params('select id from places where id = $1',[v['id']]).ntuples == 0
-            db.exec_prepared('insert_place',[v['id'], v['name'], v['streetID'], (v.has_key?('createdOn') ? Time.at(v['createdOn']/1000) : nil), v['createdBy'], (v.has_key?('updatedOn') ? Time.at(v['updatedOn']/1000) : nil), v['updatedBy'], (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0]), (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1]), v['lockRank'], v['approved'], v['residential'], v['categories'][0], (v.has_key?('adLocked') ? v['adLocked'] : false) ])
+            db.exec_prepared('insert_place',[v['id'], v['name'], v['streetID'], (v.has_key?('createdOn') ? Time.at(v['createdOn']/1000) : nil), v['createdBy'], (v.has_key?('updatedOn') ? Time.at(v['updatedOn']/1000) : nil), v['updatedBy'], (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0]), (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1]), v['lockRank'], v['approved'], v['residential'], v['categories'][0], (v.has_key?('adLocked') ? v['adLocked'] : false), (v['geometry']['type']=='Point' ? 'P': 'A') ])
           end
 #          if v.has_key?('venueUpdateRequests')
 #            pu = {'dateAdded' => (Time.now.to_i * 1000)}
