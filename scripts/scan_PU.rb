@@ -52,21 +52,29 @@ def scan_PU(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
       area = [lonStart, latStart, lonEnd, latEnd]
 
       begin
-        wme = agent.get "https://www.waze.com/row-Descartes-live/app/Features?venueLevel=5&venueFilter=1&venueUpdateRequests=true&bbox=#{area.join('%2C')}"
+        wme = agent.get "https://www.waze.com/row-Descartes-live/app/Features?venueLevel=4&venueFilter=1&venueUpdateRequests=true&bbox=#{area.join('%2C')}"
 
         json = JSON.parse(wme.body)
 
         # Stores users that edit on this area
         json['users']['objects'].each do |u|
           if db.exec_params('select * from users where id = $1',[u['id']]).ntuples == 0
-            db.exec_prepared('insert_user', [u['id'],u['userName'],u['rank']+1])
+            begin
+              db.exec_prepared('insert_user', [u['id'],u['userName'],u['rank']+1])
+            rescue PG::UniqueViolation
+              error = true
+            end
           end
         end
 
         # Stores PUs data from the area
         json['venues']['objects'].each do |v|
           if db.exec_params('select id from places where id = $1',[v['id']]).ntuples == 0
-            db.exec_prepared('insert_place',[v['id'], v['name'], v['streetID'], (v.has_key?('createdOn') ? Time.at(v['createdOn']/1000) : nil), v['createdBy'], (v.has_key?('updatedOn') ? Time.at(v['updatedOn']/1000) : nil), v['updatedBy'], (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0]), (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1]), v['lockRank'], v['approved'], v['residential'], v['categories'][0], (v.has_key?('adLocked') ? v['adLocked'] : false), (v['geometry']['type']=='Point' ? 'P': 'A') ])
+            begin
+              db.exec_prepared('insert_place',[v['id'], v['name'], v['streetID'], (v.has_key?('createdOn') ? Time.at(v['createdOn']/1000) : nil), v['createdBy'], (v.has_key?('updatedOn') ? Time.at(v['updatedOn']/1000) : nil), v['updatedBy'], (v['geometry']['type']=='Point'? v['geometry']['coordinates'][0] : v['geometry']['coordinates'][0][0][0]), (v['geometry']['type']=='Point'? v['geometry']['coordinates'][1] : v['geometry']['coordinates'][0][0][1]), v['lockRank'], v['approved'], v['residential'], v['categories'][0], (v.has_key?('adLocked') ? v['adLocked'] : false), (v['geometry']['type']=='Point' ? 'P': 'A') ])
+            rescue PG::UniqueViolation
+              error = true
+            end
           end
 #          if v.has_key?('venueUpdateRequests')
 #            pu = {'dateAdded' => (Time.now.to_i * 1000)}
