@@ -21,5 +21,5 @@
             %td= place.place_type
             %td= place.lock
             %td= "#{place.creator.username}(#{place.creator.rank})"
-            %td= "#{place.editor.username}(#{place.creator.rank})"
+            %td= "#{place.editor.username}(#{place.editor.rank})"
             %td= (place.updated_on.nil? ? place.created_on.strftime('%d/%m/%Y %H:%M') : place.updated_on.strftime('%d/%m/%Y %H:%M'))
