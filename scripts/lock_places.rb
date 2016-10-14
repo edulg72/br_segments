@@ -24,9 +24,7 @@ PASS = ARGV[1]
 State = ARGV[2].to_f
 Lock = (ARGV[3].to_i)
 Passo = 0.09
-MaxSave = 50  # Maximo de segmentos alterados por vez
-
-puts "Starting analysis on [#{LongOeste} #{LatNorte}] - [#{LongLeste} #{LatSul}]"
+#MaxSave = 50  # Maximo de segmentos alterados por vez
 
 agent = Mechanize.new
 agent.user_agent_alias = 'Mac Firefox'
