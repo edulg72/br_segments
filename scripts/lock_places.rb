@@ -14,7 +14,7 @@ require 'pg'
 require 'json'
 require 'net/http'
 
-if ARGV.size < 7
+if ARGV.size < 4
   puts "Usage: ruby lock_places.rb <user> <password> <state> <minimum lock>"
   exit
 end
