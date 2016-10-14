@@ -50,7 +50,7 @@ places.each do |place|
 
   begin
     print "=> #{place['name'].nil? ? '[Sem nome]' : place['name']} "
-    area = [place['longitude']-(Passo/2), place['latitude']+(Passo/2), place['longitude']+(Passo/2), place['latitude']-(Passo/2)]
+    area = [place['longitude'].to_f - (Passo/2), place['latitude'].to_f + (Passo/2), place['longitude'].to_f + (Passo/2), place['latitude'].to_f - (Passo/2)]
     r = agent.post("https://www.waze.com/row-Descartes-live/app/Features?language=pt-BR&bbox=#{area.join('%2C')}",ps.to_json,headers)
 
 #    uri = URI.parse("https://www.waze.com/row-Descartes-live/app/Features")
