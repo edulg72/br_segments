@@ -21,7 +21,7 @@ end
 
 USER = ARGV[0]
 PASS = ARGV[1]
-State = ARGV[2].to_f
+State = ARGV[2]
 Lock = (ARGV[3].to_i)
 Passo = 0.09
 #MaxSave = 50  # Maximo de segmentos alterados por vez
