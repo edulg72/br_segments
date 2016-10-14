@@ -35,7 +35,9 @@ begin
 rescue Mechanize::ResponseCodeError
   @csrf_token = agent.cookie_jar.jar['www.waze.com']['/']['_csrf_token'].value
 end
+
 login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "password" => PASS}, {"X-CSRF-Token" => @csrf_token})
+@cookies = login['set-cookie']
 
 db = PG::Connection.new(:hostaddr => '127.0.0.1', :dbname => 'wazedb', :user => 'waze', :password => 'waze')
 
@@ -44,7 +46,7 @@ places = db.exec("select id, name, latitude, longitude from vw_places where city
 places_updated = 0
 places.each do |place|
   ps = {'actions' => {"name" => "CompositeAction", "_subActions" => [{"name" => "MultiAction", "_subActions" => []}]}}
-  ps['actions']['_subActions'][0]['_subActions'] << {'_objectType' => 'venue', 'action' => 'UPDATE', 'attributes' => {'lockRank' => Lock, 'id' => place['id']}}
+  ps['actions']['_subActions'][0]['_subActions'] << {'_objectType' => 'venue', 'action' => 'UPDATE', 'attributes' => {'lockRank' => (Lock - 1), 'id' => place['id']}}
 
   headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json', 'Cookie' => @cookies, 'X-CSRF-Token' => @csrf_token}
 
