@@ -39,7 +39,7 @@ login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "pas
 
 db = PG::Connection.new(:hostaddr => '127.0.0.1', :dbname => 'wazedb', :user => 'waze', :password => 'waze')
 
-places = db.exec("select id, name, latitude, longitude from vw_places where city_id in (select gid from cities_shapes where state_id = (select cd_geocuf from states_shapes where abbreviation = '#{State}')) and approved and lock < #{Lock}")
+places = db.exec("select id, name, latitude, longitude from vw_places where city_id in (select gid from cities_shapes where state_id = (select cd_geocuf from states_shapes where abbreviation = '#{State}')) and not residential and approved and lock < #{Lock}")
 
 places_updated = 0
 places.each do |place|
