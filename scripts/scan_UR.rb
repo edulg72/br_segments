@@ -9,7 +9,7 @@
 # scan_UR.rb <user> <password> <west longitude> <north latitude> <east longitude> <south latitude> <step*>
 #
 # * Defines the size in degrees (width and height) of the area to be analyzed. On very dense areas use small values to avoid server overload.
-# 
+#
 require 'mechanize'
 require 'pg'
 require 'json'
@@ -35,15 +35,11 @@ rescue Mechanize::ResponseCodeError
 end
 login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "password" => PASS}, {"X-CSRF-Token" => csrf_token})
 
-db = PG::Connection.new(:hostaddr => ENV['POSTGRESQL_DB_HOST'], :dbname => ENV['POSTGRESQL_DB_NAME'], :user => ENV['POSTGRESQL_DB_USERNAME'], :password => ENV['POSTGRESQL_DB_PASSWORD'])
-db.prepare('insert_user','insert into users (id, username, rank) values ($1,$2,$3)')
-db.prepare('update_user','update users set username = $2, rank = $3 where id = $1')
-db.prepare('insert_mp','insert into mp (id,resolved_by,resolved_on,weight,position,resolution) values ($1,$2,$3,$4,ST_SetSRID(ST_Point($5, $6), 4326),$7)')
-db.prepare('insert_ur',"insert into ur (id,position,resolved_by,resolved_on,created_on,resolution) values ($1,ST_SetSRID(ST_Point($2, $3), 4326),$4,$5,$6,$7)")
-db.prepare('update_ur','update ur set comments = $1, last_comment = $2, last_comment_on = $3, last_comment_by = $4, first_comment_on = $5 where id = $6') 
+db = PG::Connection.new(:hostaddr => '127.0.0.1', :dbname => 'wazedb', :user => 'waze', :password => 'waze')
 
-$users = {}
-db.exec('select * from users').each {|u| $users[u['id']] = u['rank']}
+@users = {}
+@mps = {}
+@urs = {}
 
 def scan_UR(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
   lonStart = longWest
@@ -63,50 +59,30 @@ def scan_UR(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
 
         # Stores users that edit on this area
         json['users']['objects'].each do |u|
-          if $users.keys.include?(u['id'].to_s)
-            if $users[u['id'].to_s] != (u['rank']+1)
-              db.exec_prepared('update_user', [u['id'],u['userName'],u['rank']+1]) if $users[u['id'].to_s] != (u['rank']+1)
-              $users[u['id'].to_s] = u['rank']+1
-            end
-          else
-            db.exec_prepared('insert_user', [u['id'],u['userName'],u['rank']+1])
-            $users[u['id'].to_s] = u['rank']+1
-          end
+#          puts "#{u['id']},\"#{u['userName'].nil? ? u['userName'] : u['userName'][0..49]}\",#{u['rank']+1}"
+          @users[u['id']] = "#{u['id']},\"#{u['userName'].nil? ? u['userName'] : u['userName'][0..49]}\",#{u['rank']+1}\n" if not @users.has_key?(u['id'])
         end
 
         # Stores MPs data from the area
         json['problems']['objects'].each do |m|
-          begin
-            db.exec_prepared('insert_mp',[m['id'][2..-1], m['resolvedBy'], (m['resolvedOn'].nil? ? nil : Time.at(m['resolvedOn']/1000)), m['weight'], m['geometry']['coordinates'][0], m['geometry']['coordinates'][1], m['resolution']]) if db.exec_params('select id from mp where id = $1',[m['id'][2..-1]]).count == 0
-          rescue PG::UniqueViolation
-            puts 'm'
-          rescue PG::InvalidTextRepresentation
-            puts "#{m}"
-          end
+          puts "#{m['id']},#{m['resolvedBy']},#{m['resolvedOn'].nil? ? nil : Time.at(m['resolvedOn']/1000)},#{m['weight']},\"POINT (#{m['geometry']['coordinates'][0]} #{m['geometry']['coordinates'][1]}),4326\",#{m['resolution']}"
+          @mps[m['id']] = "#{m['id']},#{m['resolvedBy']},#{m['resolvedOn'].nil? ? nil : Time.at(m['resolvedOn']/1000)},#{m['weight']},\"POINT (#{m['geometry']['coordinates'][0]} #{m['geometry']['coordinates'][1]})\",#{m['resolution']}\n" if not @mps.has_key?(m['id'])
         end
 
         urs_area = []
         # Search IDs from area  URs
-        json['mapUpdateRequests']['objects'].each do |u| 
-          begin
-            db.exec_prepared('insert_ur', [u['id'], u['geometry']['coordinates'][0], u['geometry']['coordinates'][1], u['resolvedBy'], (u['resolvedOn'].nil? ? nil : Time.at(u['resolvedOn']/1000)), Time.at(u['driveDate']/1000), u['resolution'] ] ) if db.exec_params('select id from ur where id = $1',[u['id']]).count == 0
-            urs_area << u['id'] 
-          rescue PG::UniqueViolation
-            puts '.'
-          end
+        json['mapUpdateRequests']['objects'].each do |u|
+          @urs[u['id']] = "#{u['id']},\"SRID=4326;POINT(#{u['geometry']['coordinates'][0]} #{u['geometry']['coordinates'][1]})\",#{u['resolvedBy']},#{u['resolvedOn'].nil? ? '' : Time.at(u['resolvedOn']/1000)},#{Time.at(u['driveDate']/1000)},#{u['resolution']}" if not @urs.has_key?(u['id'])
+          urs_area << u['id']
         end
 
         # Collect data from URs
-        if urs_area.size > 0 
+        if urs_area.size > 0
           ur = JSON.parse(agent.get("https://www.waze.com/row-Descartes-live/app/MapProblems/UpdateRequests?ids=#{urs_area.join('%2C')}").body)
-       
+
           ur['updateRequestSessions']['objects'].each do |u|
-            begin
-              db.exec_prepared('update_ur', [(u.has_key?('comments') and u['comments'].size > 0 ? u['comments'].size : 0 ),(u.has_key?('comments') and u['comments'].size > 0 ? u['comments'][-1]['text'].gsub('"',"'") : nil), (u.has_key?('comments') and u['comments'].size > 0 ? Time.at(u['comments'][-1]['createdOn']/1000) : nil), (u.has_key?('comments') and u['comments'].size > 0 ? u['comments'][-1]['userID'] : nil), (u.has_key?('comments') and u['comments'].size > 0 ? Time.at(u['comments'][0]['createdOn']/1000) : nil), u['id']] )
-            rescue NoMethodError
-              puts "#{u}"
-              exit
-            end
+            @urs[u['id']] += ",#{u.has_key?('comments') and u['comments'].size > 0 ? u['comments'].size : 0},#{u.has_key?('comments') and u['comments'].size > 0 ? '"'+u['comments'][-1]['text'].gsub('"',"'")+'"' : ''},#{u.has_key?('comments') and u['comments'].size > 0 ? Time.at(u['comments'][-1]['createdOn']/1000) : ''},#{u.has_key?('comments') and u['comments'].size > 0 ? u['comments'][-1]['userID'] : ''},#{u.has_key?('comments') and u['comments'].size > 0 ? Time.at(u['comments'][0]['createdOn']/1000) : ''}\n"
+            puts @urs[u['id']]
           end
         end
 
@@ -130,3 +106,21 @@ def scan_UR(db,agent,longWest,latNorth,longEast,latSouth,step,exec)
 end
 
 scan_UR(db,agent,LongWest,LatNorth,LongEast,LatSouth,Step,1)
+
+db.exec("delete from users where id in (#{@users.keys.join(',')})") if @users.size > 0
+db.copy_data('COPY users (id,username,rank) FROM STDIN CSV') do
+  @users.each_value {|u| db.put_copy_data u}
+end
+db.exec('vacuum users')
+
+db.exec("delete from mp where id in (#{@mps.keys.join(',')})") if @mps.size > 0
+db.copy_data('COPY mp (id,resolved_by,resolved_on,weight,position,resolution) FROM STDIN CSV') do
+  @mps.each_value {|m| db.put_copy_data m}
+end
+db.exec('vacuum mp')
+
+db.exec("delete from ur where id in (#{@urs.keys.join(',')})") if @urs.size > 0
+db.copy_data('COPY ur (id,position,resolved_by,resolved_on,created_on,resolution,comments,last_comment,last_comment_on,last_comment_by,first_comment_on) FROM STDIN CSV') do
+  @urs.each_value {|u| db.put_copy_data u}
+end
+db.exec('vacuum ur')
