@@ -21,8 +21,16 @@ class MainController < ApplicationController
   end
 
   def search
-    @search = Search.new
+  #  @search = Search.new
+    @segments = nil
+    if not params['name'].nil?
+      if not params['name'].empty?
+        @segments = Segment.joins(:street).where("upper(vw_streets.name) like '%#{params['name'].upcase}%'")
+      end
+    end
+    @params = params
     @states = StateShape.all
+    @nav = [{'Search' => "#"},{ t('nav-first-page') => '/'}]
   end
 
   def places

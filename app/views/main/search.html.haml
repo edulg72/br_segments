@@ -1,5 +1,33 @@
 #search
-  = form_tag('/search',form-horizontal) do
+  = form_tag('/search', method: 'post', class: 'form-horizontal') do
+    -#.form-group
+      %label.col-sm-2.col-md-1.col-lg-1.control-label{for: 'state_id'} Estado
+      .col-sm-4.col-md-5.col-lg-5
+        = select_tag(:state_id, options_from_collection_for_select(StateShape.order('nm_estado').all, :cd_geocuf, :nm_estado),{class: 'form-control'})
     .form-group
-      %label.col-sm-2.col-md-1.col-lg-1.control-label{for: 'state'} Estado
-      = select_tag(:state_id, options_from_collection_for_select(StateShape.all, :cd_geocuf, :nm_estado))
+      %label.col-sm-2.col-md-1.col-lg-1.control-label{for: 'name'} Nome
+      .col-sm-9.col-md-10.col-lg-10
+        %input.form-control{id: 'name', name: 'name', placeholder: 'Digite parte do nome procurado'}
+      .col-sm-1.col-md-1.col-lg-1
+        %button.btn.btn-default{type: 'submit'} Procurar
+  - if not @segments.nil?
+    %p.bg-success.text-center
+      = "Foram encontrados #{@segments.size} segmentos com "
+      %strong= @params['name']
+      = " no nome"
+    - if @segments.size > 0
+      %table.table.table-condensed.table-hover
+        %thead
+          %tr
+            %th Localiza&ccedil;&atilde;o do Segmento
+            %th Tipo
+            %th Atualizado em
+            %th Editor
+        %tbody
+          - @segments.order("last_edit_on desc").limit(10000).each do |segment|
+            %tr
+              %td
+                %a{:href => "https://www.waze.com/pt-BR/editor/?zoom=5&lat=#{segment.latitude}&lon=#{segment.longitude}&segments=#{segment.id}", :target => 'WME'}= segment.location
+              %td= roadtype_name(segment.roadtype)
+              %td= segment.last_edit_on.strftime('%d/%m/%Y %H:%M')
+              %td= "#{segment.editor.username} (#{segment.editor.rank})"
