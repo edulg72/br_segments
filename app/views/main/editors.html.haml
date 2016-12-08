@@ -1,0 +1,20 @@
+- cache [@update] do
+  .page-header
+    %h3
+      Lista de editores brasileiros
+      %span.badge= @editors.size
+    %small= "#{t('updated-at')} #{ @update.strftime('%d/%m/%Y %H:%M')}"
+  - if @editors.size > 0
+    %table.table.table-condensed.table-hover
+      %thead
+        %tr
+          %th Editor
+          %th.text-center Nível
+          %th Último segmento editado
+        - @editors.each do |editor|
+          %tr
+            %td
+              %a{href: "https://www.waze.com/user/editor/#{editor.username}", target: "_user"}= editor.username
+            %td.text-center= editor.rank
+            %td
+              = "#{editor.last_edit.strftime('%d/%m/%Y %H:%M')} (#{((Time.now - editor.last_edit)/(24*60*60)).to_int} dias atrás)"
