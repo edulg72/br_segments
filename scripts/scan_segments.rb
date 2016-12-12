@@ -30,6 +30,7 @@ Passo = ARGV[6].to_f
 puts "Starting analysis on [#{LongOeste} #{LatNorte}] - [#{LongLeste} #{LatSul}]"
 
 agent = Mechanize.new
+agent.ignore_bad_chunking = true
 begin
   page = agent.get "https://www.waze.com/row-Descartes-live/app/Session"
 rescue Mechanize::ResponseCodeError
@@ -100,6 +101,10 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
         else
           puts "Erro JSON em #{area}"
         end
+      rescue Mechanize::ChunkedTerminationError
+        puts "[#{Time.now.strftime('%d/%m/%Y %H:%M:%S')}] - ChunkedTerminationError em #{area}"
+      rescue Mechanize::Error
+        puts "[#{Time.now.strftime('%d/%m/%Y %H:%M:%S')}] - Error em #{area}"
       end
 
       latIni = latFim
