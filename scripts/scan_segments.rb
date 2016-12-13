@@ -82,8 +82,9 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
         json['segments']['objects'].each do |s|
           (longitude, latitude) = s['geometry']['coordinates'][(s['geometry']['coordinates'].size / 2)]
           nodes = []
+
           s['geometry']['coordinates'].each {|c| nodes << "#{c[0]} #{c[1]}"}
-          @segments[s['id']] = "#{s['id']},#{longitude},#{latitude},#{s['roadType']},#{s['level']},#{(s['lockRank'].nil? ? '' : s['lockRank'] + 1)},#{(s['updatedOn'].nil? ? s['createdBy'] : s['updatedBy'])},#{(s['updatedOn'].nil? ? Time.at(s['createdOn']/1000) : Time.at(s['updatedOn']/1000))},#{s['primaryStreetID']},#{s['length']},#{((s['fwdDirection'] and s['toConnections'].size > 0) or (s['revDirection'] and s['fromConnections'].size > 0)) ? 'TRUE' : 'FALSE' },#{s['fwdDirection']},#{s['revDirection']},#{s['fwdMaxSpeed']},#{s['revMaxSpeed']},#{(s['junctionID'].nil? ? 'FALSE' : 'TRUE')},#{s['streetIDs'].size > 0},#{s['validated']},#{s['fwdToll'] or s['revToll']},#{s['flags']},\"SRID=4326;LINESTRING(#{nodes.join(',')})\"\n" if not @segments.has_key?(s['id'])
+          @segments[s['id']] = "#{s['id']},#{longitude},#{latitude},#{s['roadType']},#{s['level']},#{(s['lockRank'].nil? ? '' : s['lockRank'] + 1)},#{(s['updatedOn'].nil? ? s['createdBy'] : s['updatedBy'])},#{(s['updatedOn'].nil? ? Time.at(s['createdOn']/1000) : Time.at(s['updatedOn']/1000))},#{s['primaryStreetID']},#{s['length']},#{((s['fwdDirection'] and json['connections'].has_key?(s['id'].to_s + 'r')) or (s['revDirection'] and json['connections'].has_key?(s['id'].to_s + 'f'))) ? 'TRUE' : 'FALSE' },#{s['fwdDirection']},#{s['revDirection']},#{s['fwdMaxSpeed']},#{s['revMaxSpeed']},#{(s['junctionID'].nil? ? 'FALSE' : 'TRUE')},#{s['streetIDs'].size > 0},#{s['validated']},#{s['fwdToll'] or s['revToll']},#{s['flags']},\"SRID=4326;LINESTRING(#{nodes.join(',')})\"\n" if not @segments.has_key?(s['id'])
         end
 
       rescue Mechanize::ResponseCodeError, NoMethodError
