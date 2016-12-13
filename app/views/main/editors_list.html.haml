@@ -1,0 +1,4 @@
+- cache [@update] do
+  - @editors.each do |editor|
+    = "#{editor.username},#{editor.rank},#{editor.last_edit.strftime('%d/%m/%Y %H:%M')}"
+    %br
