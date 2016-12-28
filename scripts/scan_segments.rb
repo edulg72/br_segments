@@ -107,6 +107,7 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
       rescue Mechanize::Error
         puts "[#{Time.now.strftime('%d/%m/%Y %H:%M:%S')}] - Error em #{area}"
       end
+      sleep 5
 
       latIni = latFim
     end
