@@ -97,7 +97,7 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
         end
       rescue JSON::ParserError
         if exec < 1
-          sleep(5)
+          sleep 2
           busca(db,agent,area[0],area[1],area[2],area[3],passo,(exec+1))
         else
           puts "Erro JSON em #{area}"
@@ -107,7 +107,7 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
       rescue Mechanize::Error
         puts "[#{Time.now.strftime('%d/%m/%Y %H:%M:%S')}] - Error em #{area}"
       end
-      sleep 5
+      sleep 1
 
       latIni = latFim
     end
