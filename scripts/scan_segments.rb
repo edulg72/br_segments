@@ -31,12 +31,13 @@ puts "Starting analysis on [#{LongOeste} #{LatNorte}] - [#{LongLeste} #{LatSul}]
 
 agent = Mechanize.new
 agent.ignore_bad_chunking = true
-begin
-  page = agent.get "https://www.waze.com/row-Descartes-live/app/Session"
-rescue Mechanize::ResponseCodeError
-  csrf_token = agent.cookie_jar.jar['www.waze.com']['/']['_csrf_token'].value
-end
-login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "password" => PASS}, {"X-CSRF-Token" => csrf_token})
+agent.user_agent_alias = 'Mac Safari'
+#begin
+#  page = agent.get "https://www.waze.com/row-Descartes-live/app/Session"
+#rescue Mechanize::ResponseCodeError
+#  csrf_token = agent.cookie_jar.jar['www.waze.com']['/']['_csrf_token'].value
+#end
+#login = agent.post('https://www.waze.com/login/create', {"user_id" => USER, "password" => PASS}, {"X-CSRF-Token" => csrf_token})
 
 db = PG::Connection.new(:hostaddr => '127.0.0.1', :dbname => 'wazedb', :user => 'waze', :password => 'waze')
 
@@ -63,7 +64,7 @@ def busca(db,agent,longOeste,latNorte,longLeste,latSul,passo,exec)
       area = [lonIni, latIni, lonFim, latFim]
 
       begin
-        wme = agent.get "https://www.waze.com/row-Descartes-live/app/Features?roadTypes=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C10%2C15%2C16%2C17%2C18%2C19%2C20&zoom=5&bbox=#{area.join('%2C')}"
+        wme = agent.get "https://www.waze.com/row-Descartes-live/app/Features?roadTypes=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C10%2C15%2C16%2C17%2C18%2C19%2C20&zoom=5&bbox=#{area.join('%2C')}&sandbox=true"
 
         json = JSON.parse(wme.body)
 
